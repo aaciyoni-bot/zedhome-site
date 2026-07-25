@@ -27,7 +27,8 @@ app.get('/api/health', (req, res) => {
         keyConfigured: Boolean(RAPIDAPI_KEY),
         apiHost: API_HOST,
         paymentsConfigured: Boolean(PAWAPAY_TOKEN),
-        paymentsEnv: process.env.PAWAPAY_ENV === 'production' ? 'production' : 'sandbox'
+        paymentsEnv: process.env.PAWAPAY_ENV === 'production' ? 'production' : 'sandbox',
+        veripointsConfigured: Boolean(process.env.VERIPOINTS_API && process.env.VERIPOINTS_SERVER_KEY)
     });
 });
 
@@ -183,6 +184,51 @@ app.get('/api/pay/status', async (req, res) => {
     } catch (error) {
         // Status often 404s for a moment right after initiation - treat as pending
         res.json({ status: 'pending' });
+    }
+});
+
+/* =====================================================================
+   VERIPOINTS — shared ORIZIS wallet (server-side seam)
+   Real value only moves here, never in the browser. Both endpoints stay
+   inert (enabled:false) until VERIPOINTS_API + VERIPOINTS_SERVER_KEY are
+   set, so the storefront cleanly falls back to Mobile-Money-only.
+     VERIPOINTS_API         - base URL of the central VeriPoints service
+     VERIPOINTS_SERVER_KEY  - secret serverKey for capture/credit (per siteId)
+   ===================================================================== */
+const VERIPOINTS_API = process.env.VERIPOINTS_API;
+const VERIPOINTS_SERVER_KEY = process.env.VERIPOINTS_SERVER_KEY;
+const vpReady = () => Boolean(VERIPOINTS_API && VERIPOINTS_SERVER_KEY);
+const vpUrl = path => `${String(VERIPOINTS_API).replace(/\/$/, '')}${path}`;
+const vpAuth = () => ({ Authorization: `Bearer ${VERIPOINTS_SERVER_KEY}`, 'Content-Type': 'application/json' });
+
+// Captures a hold the client already placed → finalises a VeriPoints payment.
+app.post('/api/vp/capture', async (req, res) => {
+    if (!vpReady()) return res.json({ enabled: false, captured: false });
+    const { holdId, siteId } = req.body || {};
+    if (!holdId) return res.status(400).json({ error: 'INVALID_INPUT', captured: false });
+    try {
+        const r = await axios.post(vpUrl('/capture'),
+            { holdId, siteId, serverKey: VERIPOINTS_SERVER_KEY },
+            { headers: vpAuth(), timeout: 25000 });
+        res.json({ captured: Boolean(r.data && (r.data.captured || r.data.ok)) });
+    } catch (error) {
+        res.status(502).json({ error: 'VP_CAPTURE_ERROR', captured: false, message: error.message });
+    }
+});
+
+// Credits loyalty points to the customer after any successful order.
+// Best-effort: failures never block the order the storefront already placed.
+app.post('/api/vp/earn', async (req, res) => {
+    if (!vpReady()) return res.json({ enabled: false, credited: false });
+    const { points, siteId, reference, idToken } = req.body || {};
+    if (!(points > 0)) return res.status(400).json({ error: 'INVALID_INPUT', credited: false });
+    try {
+        const r = await axios.post(vpUrl('/credit'),
+            { points, siteId, reference, idToken, serverKey: VERIPOINTS_SERVER_KEY },
+            { headers: vpAuth(), timeout: 20000 });
+        res.json({ credited: Boolean(r.data && (r.data.credited || r.data.ok)) });
+    } catch (error) {
+        res.status(502).json({ error: 'VP_EARN_ERROR', credited: false, message: error.message });
     }
 });
 
