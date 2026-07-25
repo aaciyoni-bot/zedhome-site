@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ZedHome — Home &amp; Kitchen Delivered, Pay with Mobile Money 🇿🇲</title>
+    <meta name="description" content="ZedHome — Zambia's home &amp; kitchen store: appliances, cookware, décor and everyday essentials at wholesale prices. Pay with MTN MoMo, Airtel Money or Zamtel Kwacha. No credit card. Made for your phone.">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d9488">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ZedHome">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        glow: {
+                            50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 400: '#2dd4bf',
+                            500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 900: '#134e4a'
+                        },
+                        gold: { DEFAULT: '#e3ae4e', soft: '#f4d58d', deep: '#b8862f' },
+                        zam: { green: '#198a00', red: '#de2010', black: '#000000', orange: '#ef7d00' }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['"Playfair Display"', 'serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .spinner { border: 3px solid #ccfbf1; border-top-color: #0d9488; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .pulse-ring { animation: pulseRing 1.5s ease-out infinite; }
+        @keyframes pulseRing { 0% { box-shadow: 0 0 0 0 rgba(25,138,0,0.4); } 100% { box-shadow: 0 0 0 16px rgba(25,138,0,0); } }
+    </style>
+</head>
+<body class="bg-glow-50 font-sans text-slate-800 min-h-screen flex flex-col">
+
+    <!-- ═══ ORIZIS INTRO · standalone module ═══ -->
+    <div id="orizis-intro">
+      <style>
+        #orizis-intro { position: fixed; inset: 0; z-index: 999999; background: #0d0510; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: opacity 0.45s ease; }
+        #orizis-intro.oi-out { opacity: 0; pointer-events: none; }
+        #orizis-intro .oi-mark { font-family: 'Playfair Display', Georgia, serif; font-weight: 900; font-size: clamp(38px, 9vw, 72px); letter-spacing: 0.22em; margin-right: -0.22em; background: linear-gradient(100deg, #134e4a 0%, #ccfbf1 28%, #e3ae4e 50%, #ccfbf1 72%, #134e4a 100%); background-size: 240% auto; -webkit-background-clip: text; background-clip: text; color: transparent; opacity: 0; animation: oiShine 1.9s ease forwards, oiRise 0.9s cubic-bezier(0.22,1,0.36,1) forwards; }
+        #orizis-intro .oi-sub { font-family: 'Inter', Arial, sans-serif; font-weight: 700; font-size: clamp(10px, 2.2vw, 14px); letter-spacing: 0.55em; margin-right: -0.55em; color: #5a8a82; margin-top: 14px; opacity: 0; animation: oiFade 0.7s ease 0.55s forwards; }
+        #orizis-intro .oi-line { width: 0; height: 1px; background: linear-gradient(90deg, transparent, #e3ae4e, transparent); margin-top: 22px; animation: oiLine 1.1s ease 0.35s forwards; }
+        #orizis-intro .oi-load { display: flex; align-items: center; gap: 8px; margin-top: 26px; color: #5a8a82; font-family: 'Inter', Arial, sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.2em; opacity: 0; animation: oiFade 0.7s ease 0.9s forwards; }
+        #orizis-intro .oi-spin { width: 14px; height: 14px; border: 2px solid rgba(227,174,78,0.25); border-top-color: #e3ae4e; border-radius: 50%; animation: oiSpin 0.9s linear infinite; }
+        @keyframes oiSpin { to { transform: rotate(360deg); } }
+        @keyframes oiShine { from { background-position: 200% center; } to { background-position: -40% center; } }
+        @keyframes oiRise { from { opacity: 0; transform: translateY(14px) scale(0.97); } to { opacity: 1; transform: none; } }
+        @keyframes oiFade { to { opacity: 1; } }
+        @keyframes oiLine { to { width: min(320px, 60vw); } }
+      </style>
+      <div class="oi-mark">ORIZIS</div>
+      <div class="oi-line"></div>
+      <div class="oi-sub">TECHNOLOGY</div>
+      <div class="oi-load"><div class="oi-spin"></div>LOADING</div>
+      <script>
+        (function () {
+          var el = document.getElementById('orizis-intro');
+          var done = false;
+          function out() { if (done) return; done = true; el.classList.add('oi-out'); setTimeout(function () { el.remove(); }, 500); }
+          el.addEventListener('click', out);
+          el.addEventListener('touchstart', out, { passive: true });
+          setTimeout(out, 1300);
+        })();
+      </script>
+    </div>
+    <!-- ═══ /ORIZIS INTRO ═══ -->
+
+    <!-- ======================= TOP BAR ======================= -->
+    <div class="bg-glow-900 text-white text-xs sm:text-sm py-1.5 px-4 text-center">
+        <i class="fas fa-truck-fast mr-1 text-gold-soft"></i> Free delivery on orders over K600 &nbsp;•&nbsp; Pay with <b>MTN MoMo</b>, <b>Airtel Money</b> &amp; <b>Zamtel Kwacha</b>
+    </div>
+
+    <!-- ======================= HEADER ======================= -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3 sm:gap-6">
+            <a href="#" onclick="goHome(); return false;" class="flex items-center gap-2 shrink-0">
+                <div class="bg-gradient-to-br from-glow-500 to-glow-700 text-white w-10 h-10 rounded-xl flex items-center justify-center text-lg shadow-md">
+                    <i class="fas fa-house-chimney"></i>
+                </div>
+                <div class="hidden sm:block">
+                    <h1 class="text-xl font-display font-extrabold tracking-tight leading-none">Zed<span class="text-glow-600">Home</span></h1>
+                    <p class="text-[10px] text-slate-400 leading-none mt-0.5">Wholesale home &amp; kitchen. Pay Local.</p>
+                </div>
+            </a>
+
+            <div class="flex-1 relative">
+                <input id="searchInput" type="text" placeholder="Search blenders, cookware, air fryers..."
+                    class="w-full border-2 border-glow-500 rounded-full py-2.5 pl-5 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-glow-100"
+                    onkeydown="if(event.key==='Enter') doSearch()">
+                <button onclick="doSearch()" class="absolute right-1 top-1 bottom-1 bg-glow-600 hover:bg-glow-700 text-white rounded-full w-10 flex items-center justify-center transition">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+
+            <button onclick="toggleCart(true)" class="relative shrink-0 text-slate-600 hover:text-glow-600 transition p-2">
+                <i class="fas fa-cart-shopping text-2xl"></i>
+                <span id="cartCount" class="absolute -top-1 -right-1 bg-zam-red text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+            </button>
+        </div>
+
+        <!-- Categories -->
+        <nav class="max-w-7xl mx-auto px-4 pb-2.5 flex gap-2 items-center overflow-x-auto no-scrollbar">
+            <button onclick="showBudget()" class="cat-chip-deal shrink-0"><i class="fas fa-fire"></i> Deals under K200</button>
+            <button onclick="searchCategory('kitchen blender multifunction')" class="cat-chip"><i class="fas fa-blender mr-1.5"></i>Kitchen Appliances</button>
+            <button onclick="searchCategory('non stick cookware pots set')" class="cat-chip"><i class="fas fa-kitchen-set mr-1.5"></i>Cookware &amp; Pots</button>
+            <button onclick="searchCategory('air fryer 5l')" class="cat-chip"><i class="fas fa-plug mr-1.5"></i>Small Appliances</button>
+            <button onclick="searchCategory('food storage containers set')" class="cat-chip"><i class="fas fa-box mr-1.5"></i>Food Storage</button>
+            <button onclick="searchCategory('home decor wall')" class="cat-chip"><i class="fas fa-couch mr-1.5"></i>Home Decor</button>
+            <button onclick="searchCategory('kitchen cleaning brush set')" class="cat-chip"><i class="fas fa-broom mr-1.5"></i>Cleaning</button>
+            <button onclick="searchCategory('bedding duvet set')" class="cat-chip"><i class="fas fa-bed mr-1.5"></i>Bedding &amp; Textiles</button>
+            <button onclick="searchCategory('bathroom organizer rack')" class="cat-chip"><i class="fas fa-bath mr-1.5"></i>Bathroom</button>
+            <button onclick="searchCategory('storage organizer box home')" class="cat-chip"><i class="fas fa-boxes-stacked mr-1.5"></i>Organizers</button>
+            <button onclick="searchCategory('led lamp home lighting')" class="cat-chip"><i class="fas fa-lightbulb mr-1.5"></i>Lighting</button>
+        </nav>
+    </header>
+
+    <!-- ======================= HERO ======================= -->
+    <section id="heroSection" class="relative overflow-hidden bg-glow-900 text-white">
+        <div class="absolute inset-0 bg-gradient-to-br from-glow-700 via-glow-900 to-[#0b2b28]"></div>
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-glow-500/30 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-32 -left-20 w-96 h-96 bg-gold/20 rounded-full blur-3xl"></div>
+        <div class="relative max-w-7xl mx-auto px-4 py-12 sm:py-16 grid sm:grid-cols-2 gap-8 items-center">
+            <div>
+                <span class="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur text-glow-100 text-xs font-bold px-3 py-1.5 rounded-full border border-white/10"><i class="fas fa-house-chimney text-gold-soft"></i> Handpicked home &amp; kitchen at wholesale prices</span>
+                <h2 class="mt-4 text-3xl sm:text-5xl font-display font-extrabold leading-tight">Upgrade your home,<br>at <span class="bg-gradient-to-r from-gold-soft to-white bg-clip-text text-transparent">wholesale prices</span> 🇿🇲</h2>
+                <p class="mt-3 text-glow-100/90 text-sm sm:text-base max-w-md">Kitchen appliances, cookware, home décor and everyday essentials for every Zambian home — shipped to your door. Pay in Kwacha with the mobile money you already use. No credit card. Ever.</p>
+                <div class="mt-5 flex flex-wrap gap-3 text-sm font-semibold">
+                    <span class="bg-white/10 backdrop-blur px-4 py-2 rounded-full border border-white/10"><i class="fas fa-mobile-screen mr-1 text-yellow-300"></i> MTN MoMo</span>
+                    <span class="bg-white/10 backdrop-blur px-4 py-2 rounded-full border border-white/10"><i class="fas fa-mobile-screen mr-1 text-red-400"></i> Airtel Money</span>
+                    <span class="bg-white/10 backdrop-blur px-4 py-2 rounded-full border border-white/10"><i class="fas fa-mobile-screen mr-1 text-green-400"></i> Zamtel Kwacha</span>
+                </div>
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <button onclick="searchCategory('kitchen blender air fryer cookware home')" class="bg-glow-600 hover:bg-glow-700 text-white font-bold px-6 py-3 rounded-full transition shadow-lg shadow-glow-900/40"><i class="fas fa-house-chimney mr-1"></i> Shop home &amp; kitchen</button>
+                    <a href="#how-it-works" class="inline-flex items-center text-sm font-bold text-white/90 hover:text-white underline underline-offset-4 px-2">How it works ↓</a>
+                </div>
+            </div>
+            <div class="hidden sm:grid grid-cols-3 gap-3 text-center text-sm">
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur"><div class="text-3xl text-gold-soft"><i class="fas fa-kitchen-set"></i></div><p class="mt-2 font-semibold text-glow-50">Kitchen &amp; home</p></div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur"><div class="text-3xl text-green-400"><i class="fas fa-mobile-screen-button"></i></div><p class="mt-2 font-semibold text-glow-50">Mobile Money</p></div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur"><div class="text-3xl text-glow-200"><i class="fas fa-truck-fast"></i></div><p class="mt-2 font-semibold text-glow-50">Delivered to you</p></div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur col-span-3"><p class="font-semibold text-glow-50"><i class="fas fa-shield-halved text-gold-soft mr-1"></i> Money-back guarantee on every order</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= MAIN ======================= -->
+    <main class="max-w-7xl mx-auto px-4 py-8 w-full flex-1">
+        <!-- Budget strip (shown on the home page) -->
+        <section id="budgetStrip" class="hidden mb-8 bg-gradient-to-r from-glow-50 to-glow-100 rounded-2xl p-4 border border-glow-100">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg sm:text-xl font-bold text-glow-700"><i class="fas fa-fire mr-1"></i> Home deals under K200</h3>
+                <button onclick="showBudget()" class="text-sm font-bold text-glow-700 hover:underline shrink-0">See all <i class="fas fa-arrow-right text-xs"></i></button>
+            </div>
+            <div id="budgetRow" class="flex gap-3 overflow-x-auto no-scrollbar pb-1"></div>
+        </section>
+
+        <div class="flex items-center justify-between mb-4">
+            <h3 id="resultsTitle" class="text-xl font-bold">Trending home &amp; kitchen in Zambia</h3>
+            <span id="resultsCount" class="text-sm text-slate-400"></span>
+        </div>
+
+        <div id="statusBox" class="hidden text-center py-16">
+            <div class="spinner mx-auto"></div>
+            <p id="statusText" class="mt-4 text-slate-500 text-sm">Loading home essentials...</p>
+        </div>
+
+        <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4"></div>
+
+        <!-- Infinite scroll: sentinel auto-loads the next page; button is a manual fallback -->
+        <div id="loadMoreWrap" class="hidden text-center py-8">
+            <button id="loadMoreBtn" onclick="loadMoreProducts()" class="bg-glow-100 text-glow-700 hover:bg-glow-600 hover:text-white font-bold px-8 py-3.5 rounded-full transition shadow-sm">
+                <i class="fas fa-plus mr-1"></i> Show more products
+            </button>
+        </div>
+        <div id="loadMoreSentinel" class="h-4"></div>
+    </main>
+
+    <!-- ======================= HOW IT WORKS ======================= -->
+    <section id="how-it-works" class="bg-white border-t border-glow-100">
+        <div class="max-w-7xl mx-auto px-4 py-14">
+            <h3 class="text-2xl sm:text-3xl font-display font-extrabold text-center">How ZedHome Works</h3>
+            <p class="text-center text-slate-500 mt-2 max-w-xl mx-auto">From your phone to your door in 4 simple steps — no credit card, no stress.</p>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-10">
+                <div class="text-center p-5 rounded-2xl bg-glow-50">
+                    <div class="text-4xl text-glow-500"><i class="fas fa-house-chimney"></i></div>
+                    <div class="mt-3 text-xs font-bold text-glow-600">STEP 1</div>
+                    <h4 class="font-bold mt-1">Pick your essentials</h4>
+                    <p class="text-sm text-slate-500 mt-1">Browse kitchen appliances, cookware, décor and home essentials with prices in Kwacha — everything included, no surprises.</p>
+                </div>
+                <div class="text-center p-5 rounded-2xl bg-glow-50">
+                    <div class="text-4xl text-glow-500"><i class="fas fa-mobile-screen"></i></div>
+                    <div class="mt-3 text-xs font-bold text-glow-600">STEP 2</div>
+                    <h4 class="font-bold mt-1">Pay with Mobile Money</h4>
+                    <p class="text-sm text-slate-500 mt-1">Enter your MTN, Airtel or Zamtel number and approve the prompt with your PIN.</p>
+                </div>
+                <div class="text-center p-5 rounded-2xl bg-glow-50">
+                    <div class="text-4xl text-glow-500"><i class="fas fa-box-open"></i></div>
+                    <div class="mt-3 text-xs font-bold text-glow-600">STEP 3</div>
+                    <h4 class="font-bold mt-1">We handle the rest</h4>
+                    <p class="text-sm text-slate-500 mt-1">Our team places your order with our trusted supplier and tracks it all the way to Zambia.</p>
+                </div>
+                <div class="text-center p-5 rounded-2xl bg-glow-50">
+                    <div class="text-4xl text-glow-500"><i class="fas fa-truck-fast"></i></div>
+                    <div class="mt-3 text-xs font-bold text-glow-600">STEP 4</div>
+                    <h4 class="font-bold mt-1">Delivered to you</h4>
+                    <p class="text-sm text-slate-500 mt-1">Your order arrives in 12–25 days. We keep you updated by SMS and WhatsApp.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= ABOUT ======================= -->
+    <section id="about" class="bg-glow-50 border-t border-glow-100">
+        <div class="max-w-7xl mx-auto px-4 py-14 grid sm:grid-cols-2 gap-10 items-center">
+            <div>
+                <h3 class="text-2xl sm:text-3xl font-display font-extrabold">About Zed<span class="text-glow-600">Home</span></h3>
+                <p class="mt-4 text-slate-600 leading-relaxed">A better home shouldn't cost a fortune. But between the middlemen and the shops, the same blender, cookware set or air fryer that leaves the warehouse for a few hundred Kwacha ends up costing double by the time it reaches Zambia.</p>
+                <p class="mt-3 text-slate-600 leading-relaxed"><b>ZedHome fixes that.</b> We connect you directly to the world's biggest home &amp; kitchen catalog, with prices in Kwacha and payment through the mobile money you already use every day. You shop, you approve a prompt on your phone, and we take care of everything else — ordering, shipping and tracking until it reaches your hands.</p>
+                <p class="mt-3 text-slate-600 leading-relaxed">Real quality. Honest prices. Proudly built for the homes of Zambia. 🇿🇲</p>
+            </div>
+            <div class="grid grid-cols-1 gap-4">
+                <div class="flex items-start gap-4 bg-white rounded-2xl p-5 shadow-sm">
+                    <div class="text-2xl text-glow-500 w-8 text-center shrink-0"><i class="fas fa-lock"></i></div>
+                    <div><h4 class="font-bold">Safe payments</h4><p class="text-sm text-slate-500">You approve every payment yourself with your Mobile Money PIN. We never see your PIN.</p></div>
+                </div>
+                <div class="flex items-start gap-4 bg-white rounded-2xl p-5 shadow-sm">
+                    <div class="text-2xl text-glow-500 w-8 text-center shrink-0"><i class="fas fa-shield-heart"></i></div>
+                    <div><h4 class="font-bold">Money-back guarantee</h4><p class="text-sm text-slate-500">If your order never arrives, you get a full refund to your mobile money wallet.</p></div>
+                </div>
+                <div class="flex items-start gap-4 bg-white rounded-2xl p-5 shadow-sm">
+                    <div class="text-2xl text-glow-500 w-8 text-center shrink-0"><i class="fas fa-headset"></i></div>
+                    <div><h4 class="font-bold">Real human support</h4><p class="text-sm text-slate-500">Questions? Our Zambian team answers on WhatsApp, 7 days a week.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= FAQ ======================= -->
+    <section id="faq" class="bg-white border-t border-glow-100">
+        <div class="max-w-3xl mx-auto px-4 py-14">
+            <h3 class="text-2xl sm:text-3xl font-display font-extrabold text-center">Frequently Asked Questions</h3>
+            <div class="mt-8 space-y-3">
+                <details class="faq-item">
+                    <summary>Are the products genuine and new?</summary>
+                    <p>Yes. Every item we ship is brand new and sealed, sourced from top-rated international suppliers — the same warehouses that supply shops and homes across Africa.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Do I need a credit card or bank account?</summary>
+                    <p>No! That's the whole point of ZedHome. All you need is a Mobile Money wallet — MTN MoMo, Airtel Money or Zamtel Kwacha — with enough balance for your order.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>How long does delivery take?</summary>
+                    <p>Most orders arrive within 12–25 days, depending on the item and your location in Zambia. We send you updates by SMS and WhatsApp along the way.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Will electrical appliances work in Zambia?</summary>
+                    <p>Yes. We supply appliances rated for 220–240V, the standard in Zambia. Where a plug differs, a simple adapter sorts it out — and every listing shows the specs so you know exactly what you're getting before you pay.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Is the price I see the final price?</summary>
+                    <p>The price shown includes our service and delivery handling. At checkout a small service fee (5%) is added to cover mobile money charges — the total you see at checkout is exactly what you pay.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>What if my order arrives faulty or never comes?</summary>
+                    <p>You're covered by our money-back guarantee: if your order doesn't arrive, or arrives faulty, we refund you in full to your mobile money wallet. Just message us on WhatsApp with your order number.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>How do I talk to a real person?</summary>
+                    <p>Tap the green WhatsApp button in the Support section below — our team replies 7 days a week, 08:00–20:00. Keep your order number handy so we can help faster.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= SUPPORT BANNER ======================= -->
+    <section id="support" class="bg-glow-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 py-10 text-center">
+            <h3 class="text-2xl font-display font-extrabold">Need help choosing? <i class="fas fa-comments text-gold-soft ml-1"></i></h3>
+            <p class="mt-2 text-glow-100/90">Orders, tracking, refunds or just finding the right appliance for your kitchen — chat with our team on WhatsApp, 7 days a week, 08:00–20:00.</p>
+            <a id="waSupportBtn" href="#" target="_blank" rel="noopener"
+               class="inline-flex items-center gap-2 mt-5 bg-[#25D366] text-white font-extrabold px-8 py-3.5 rounded-full hover:brightness-110 transition">
+                <i class="fab fa-whatsapp text-2xl"></i> Chat on WhatsApp
+            </a>
+        </div>
+    </section>
+
+    <!-- ======================= FOOTER ======================= -->
+    <footer class="bg-[#0b2b28] text-glow-100/70 mt-10">
+        <div class="max-w-7xl mx-auto px-4 py-10 grid sm:grid-cols-3 gap-8 text-sm">
+            <div>
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="bg-gradient-to-br from-glow-500 to-glow-700 text-white w-8 h-8 rounded-lg flex items-center justify-center"><i class="fas fa-house-chimney"></i></div>
+                    <span class="font-display font-extrabold text-white text-lg">Zed<span class="text-glow-400">Home</span></span>
+                </div>
+                <p class="text-glow-100/60">Zambia's store for imported home &amp; kitchen at wholesale prices — appliances, cookware, décor and everyday essentials. Pay with the mobile money you already have.</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-3">Quick links</h4>
+                <ul class="space-y-2 text-glow-100/60">
+                    <li><a href="#how-it-works" class="hover:text-white transition">How it works</a></li>
+                    <li><a href="#about" class="hover:text-white transition">About ZedHome</a></li>
+                    <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
+                    <li><a href="#support" class="hover:text-white transition">Customer support</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-3">We accept</h4>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-yellow-400 text-black font-bold px-3 py-1.5 rounded-lg text-xs">MTN MoMo</span>
+                    <span class="bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs">Airtel Money</span>
+                    <span class="bg-green-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs">Zamtel Kwacha</span>
+                </div>
+                <p class="mt-4 text-glow-100/50 text-xs">Prices shown in Zambian Kwacha (ZMW), incl. service. Exchange rate updated daily.</p>
+            </div>
+        </div>
+        <div class="border-t border-white/10 text-center py-4 text-xs text-glow-100/50">© 2026 ZedHome Zambia · an ORIZIS TECHNOLOGY brand. All rights reserved.</div>
+    </footer>
+
+    <!-- ======================= CART DRAWER ======================= -->
+    <div id="cartOverlay" class="fixed inset-0 bg-black/50 z-50 hidden" onclick="toggleCart(false)"></div>
+    <aside id="cartDrawer" class="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="flex items-center justify-between p-4 border-b">
+            <h3 class="font-bold text-lg"><i class="fas fa-cart-shopping text-glow-600 mr-2"></i>Your Cart</h3>
+            <button onclick="toggleCart(false)" class="text-slate-400 hover:text-slate-700 p-2"><i class="fas fa-xmark text-xl"></i></button>
+        </div>
+        <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+        <div class="border-t p-4 space-y-3 bg-glow-50">
+            <div class="flex justify-between text-sm"><span class="text-slate-500">Subtotal</span><span id="cartSubtotal" class="font-semibold">K0.00</span></div>
+            <div class="flex justify-between text-sm"><span class="text-slate-500">Service &amp; delivery estimate</span><span id="cartFees" class="font-semibold">K0.00</span></div>
+            <div class="flex justify-between text-lg font-extrabold"><span>Total</span><span id="cartTotal" class="text-glow-700">K0.00</span></div>
+            <button id="checkoutBtn" onclick="openCheckout()" class="w-full bg-zam-green hover:bg-green-800 text-white font-bold py-3.5 rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed">
+                <i class="fas fa-mobile-screen mr-2"></i>Pay with Mobile Money
+            </button>
+        </div>
+    </aside>
+
+    <!-- ======================= CHECKOUT MODAL ======================= -->
+    <div id="checkoutModal" class="fixed inset-0 bg-black/60 z-[60] hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden fade-in">
+
+            <!-- Step 1: payment details -->
+            <div id="payStep1">
+                <div class="bg-zam-green text-white p-5">
+                    <h3 class="font-bold text-lg"><i class="fas fa-mobile-screen mr-2"></i>Mobile Money Checkout</h3>
+                    <p class="text-emerald-100 text-sm mt-1">Total to pay: <b id="payTotal" class="text-white">K0.00</b></p>
+                </div>
+                <div class="p-5 space-y-4">
+                    <div>
+                        <label class="text-sm font-semibold text-slate-600 block mb-2">Choose your network</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="selectProvider('mtn', this)" class="provider-btn border-2 rounded-xl p-3 text-center transition hover:border-glow-500">
+                                <div class="bg-yellow-400 text-black font-extrabold text-xs rounded-md py-1 mb-1">MTN</div>
+                                <span class="text-[11px] text-slate-500">MoMo</span>
+                            </button>
+                            <button onclick="selectProvider('airtel', this)" class="provider-btn border-2 rounded-xl p-3 text-center transition hover:border-glow-500">
+                                <div class="bg-red-600 text-white font-extrabold text-xs rounded-md py-1 mb-1">Airtel</div>
+                                <span class="text-[11px] text-slate-500">Money</span>
+                            </button>
+                            <button onclick="selectProvider('zamtel', this)" class="provider-btn border-2 rounded-xl p-3 text-center transition hover:border-glow-500">
+                                <div class="bg-green-700 text-white font-extrabold text-xs rounded-md py-1 mb-1">Zamtel</div>
+                                <span class="text-[11px] text-slate-500">Kwacha</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm font-semibold text-slate-600 block mb-2">Mobile money number</label>
+                        <div class="flex">
+                            <span class="bg-slate-100 border border-r-0 border-slate-300 rounded-l-xl px-3 flex items-center text-sm font-semibold text-slate-500">🇿🇲 +260</span>
+                            <input id="payPhone" type="tel" maxlength="9" placeholder="97 1234567"
+                                class="flex-1 border border-slate-300 rounded-r-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-zam-green"
+                                oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm font-semibold text-slate-600 block mb-2">Full name (for delivery)</label>
+                        <input id="payName" type="text" placeholder="e.g. Chanda Mwansa" class="w-full border border-slate-300 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-zam-green">
+                    </div>
+                    <div>
+                        <label class="text-sm font-semibold text-slate-600 block mb-2">Delivery address / town</label>
+                        <input id="payAddress" type="text" placeholder="e.g. Plot 25, Kabulonga, Lusaka" class="w-full border border-slate-300 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-zam-green">
+                    </div>
+                    <p id="payError" class="text-zam-red text-sm font-semibold hidden"></p>
+                    <button onclick="submitPayment()" class="w-full bg-zam-green hover:bg-green-800 text-white font-bold py-3.5 rounded-xl transition">
+                        Send payment request <i class="fas fa-arrow-right ml-1"></i>
+                    </button>
+                    <button onclick="closeCheckout()" class="w-full text-slate-400 text-sm py-1 hover:text-slate-600">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Step 2: waiting for approval -->
+            <div id="payStep2" class="hidden p-8 text-center">
+                <div class="w-20 h-20 mx-auto rounded-full bg-zam-green/10 flex items-center justify-center pulse-ring">
+                    <i class="fas fa-mobile-screen-button text-zam-green text-3xl"></i>
+                </div>
+                <h3 class="font-bold text-lg mt-5">Check your phone 📲</h3>
+                <p class="text-slate-500 text-sm mt-2">We sent a payment request of <b id="pay2Total" class="text-zam-green">K0.00</b> to <b id="pay2Phone"></b>.<br>Enter your Mobile Money PIN to approve.</p>
+                <p class="text-xs text-slate-400 mt-4"><span class="spinner inline-block !w-4 !h-4 !border-2 align-middle mr-1"></span> Waiting for confirmation...</p>
+            </div>
+
+            <!-- Step 3: success -->
+            <div id="payStep3" class="hidden p-8 text-center">
+                <div class="w-20 h-20 mx-auto rounded-full bg-zam-green flex items-center justify-center">
+                    <i class="fas fa-check text-white text-3xl"></i>
+                </div>
+                <h3 class="font-bold text-xl mt-5 text-zam-green">Payment received! 🎉</h3>
+                <p class="text-slate-500 text-sm mt-2">Order <b id="orderRef"></b> is confirmed.<br>We're placing your order now — you'll get an SMS with tracking details.</p>
+                <button onclick="finishOrder()" class="mt-6 w-full bg-glow-600 hover:bg-glow-700 text-white font-bold py-3 rounded-xl transition">Continue shopping</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================= PRODUCT MODAL ======================= -->
+    <div id="productModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4" onclick="if(event.target===this) closeProduct()">
+        <div class="bg-white rounded-2xl w-full max-w-2xl overflow-hidden fade-in max-h-[90vh] overflow-y-auto">
+            <div class="grid sm:grid-cols-2">
+                <img id="pmImage" src="" alt="" class="w-full h-64 sm:h-full object-cover bg-glow-50">
+                <div class="p-5 flex flex-col">
+                    <button onclick="closeProduct()" class="self-end text-slate-400 hover:text-slate-700 -mt-1"><i class="fas fa-xmark text-xl"></i></button>
+                    <h3 id="pmTitle" class="font-bold text-lg leading-snug"></h3>
+                    <div id="pmRating" class="text-yellow-500 text-sm mt-2"></div>
+                    <div class="mt-3">
+                        <span id="pmPrice" class="text-2xl font-extrabold text-glow-700"></span>
+                        <span id="pmOldPrice" class="text-sm text-slate-400 line-through ml-2"></span>
+                    </div>
+                    <p id="pmOrders" class="text-xs text-slate-400 mt-1"></p>
+                    <div class="mt-4 flex items-center gap-3">
+                        <div class="flex items-center border rounded-xl">
+                            <button onclick="pmQty(-1)" class="px-3 py-2 text-slate-500 hover:text-glow-600">−</button>
+                            <span id="pmQtyVal" class="px-2 font-bold text-sm">1</span>
+                            <button onclick="pmQty(1)" class="px-3 py-2 text-slate-500 hover:text-glow-600">+</button>
+                        </div>
+                        <button id="pmAddBtn" class="flex-1 bg-glow-600 hover:bg-glow-700 text-white font-bold py-3 rounded-xl transition">
+                            <i class="fas fa-cart-plus mr-1"></i> Add to cart
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-4"><i class="fas fa-truck mr-1"></i> Estimated delivery to Zambia: 12–25 days</p>
+                    <p class="text-xs text-slate-400 mt-1"><i class="fas fa-shield-halved mr-1"></i> Money-back guarantee if the item never arrives</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================= TOAST ======================= -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-glow-900 text-white text-sm font-semibold px-5 py-3 rounded-full shadow-xl z-[70] hidden"></div>
+
+    <!-- ======================= DOWNLOAD APP banner (mobile) ======================= -->
+    <div id="installBanner" class="hidden fixed bottom-0 left-0 right-0 z-40 bg-glow-900 text-white px-4 py-3 flex items-center gap-3 shadow-2xl">
+        <img src="icon-192.png" alt="" class="w-10 h-10 rounded-xl shrink-0">
+        <div class="flex-1 min-w-0">
+            <p class="font-bold text-sm leading-tight">Get the ZedHome App 🇿🇲</p>
+            <p class="text-[11px] text-glow-100/80 leading-tight">Faster shopping, right from your home screen</p>
+        </div>
+        <button onclick="installApp()" class="shrink-0 bg-glow-600 hover:bg-glow-500 text-white text-xs font-extrabold px-4 py-2.5 rounded-full transition">
+            <i class="fas fa-download mr-1"></i>DOWNLOAD APP
+        </button>
+        <button onclick="dismissInstall()" class="shrink-0 text-glow-100/70 hover:text-white p-1" aria-label="Dismiss"><i class="fas fa-xmark"></i></button>
+    </div>
+
+    <!-- ======================= INSTALL GUIDE overlays (with pointing arrows) ======================= -->
+    <div id="installGuide" class="hidden fixed inset-0 z-[80] bg-black/80" onclick="closeInstallGuide()">
+        <!-- iPhone guide: Safari share button is at the BOTTOM center -->
+        <div id="guideIos" class="hidden absolute inset-x-0 bottom-0 pb-20 px-6 text-white text-center">
+            <div class="bg-white text-slate-800 rounded-2xl p-5 max-w-sm mx-auto text-left" onclick="event.stopPropagation()">
+                <h4 class="font-extrabold text-lg">📲 Install on iPhone</h4>
+                <ol class="mt-3 space-y-2.5 text-sm">
+                    <li><b>1.</b> Tap the <b>Share</b> button <span class="inline-block border border-slate-300 rounded-md px-1.5 py-0.5 text-blue-500"><i class="fas fa-arrow-up-from-bracket"></i></span> at the <b>bottom of Safari</b> (the arrow below points at it)</li>
+                    <li><b>2.</b> Scroll down and tap <b>"Add to Home Screen"</b> <span class="inline-block border border-slate-300 rounded-md px-1.5 py-0.5">➕</span></li>
+                    <li><b>3.</b> Tap <b>Add</b> — ZedHome appears on your home screen like an app!</li>
+                </ol>
+                <button onclick="closeInstallGuide()" class="mt-4 w-full bg-glow-100 hover:bg-glow-200 font-bold py-2.5 rounded-xl text-sm">Got it</button>
+            </div>
+            <div class="guide-arrow-down mx-auto mt-4 text-5xl">⬇️</div>
+        </div>
+        <!-- Android guide: browser menu is at the TOP-RIGHT -->
+        <div id="guideAndroid" class="hidden absolute inset-x-0 top-0 pt-16 px-6 text-white">
+            <div class="guide-arrow-up ml-auto mr-3 text-5xl w-fit">⬆️</div>
+            <div class="bg-white text-slate-800 rounded-2xl p-5 max-w-sm mx-auto mt-4" onclick="event.stopPropagation()">
+                <h4 class="font-extrabold text-lg">📲 Install on Android</h4>
+                <ol class="mt-3 space-y-2.5 text-sm">
+                    <li><b>1.</b> Tap the <b>⋮ menu</b> at the <b>top-right of Chrome</b> (the arrow above points at it)</li>
+                    <li><b>2.</b> Tap <b>"Add to Home screen"</b> or <b>"Install app"</b></li>
+                    <li><b>3.</b> Confirm — ZedHome appears on your home screen like an app!</li>
+                </ol>
+                <button onclick="closeInstallGuide()" class="mt-4 w-full bg-glow-100 hover:bg-glow-200 font-bold py-2.5 rounded-xl text-sm">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        .cat-chip { flex-shrink: 0; background: #ccfbf1; border-radius: 9999px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #115e56; transition: all .2s; }
+        .cat-chip:hover { background: #99f6e4; color: #134e4a; }
+        .cat-chip-deal { flex-shrink: 0; display: inline-flex; align-items: center; gap: 7px; background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; border-radius: 9999px; padding: 10px 22px; font-size: 14px; font-weight: 800; box-shadow: 0 6px 16px -4px rgba(217,119,6,.55); transition: all .2s; }
+        .cat-chip-deal:hover { transform: translateY(-1px); box-shadow: 0 9px 22px -4px rgba(217,119,6,.65); }
+        .cat-chip-deal i { animation: flamePulse 1.6s ease-in-out infinite; }
+        @keyframes flamePulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: .85; } }
+        .provider-btn.selected { border-color: #0d9488 !important; background: #f0fdfa; }
+        .faq-item { background: #f0fdfa; border-radius: 16px; padding: 16px 20px; }
+        .faq-item summary { font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item summary::after { content: '+'; font-size: 20px; color: #0d9488; font-weight: 800; }
+        .faq-item[open] summary::after { content: '−'; }
+        .faq-item p { margin-top: 10px; color: #64748b; font-size: 14px; line-height: 1.6; }
+        .guide-arrow-down { animation: bounceDown 1s ease-in-out infinite; }
+        .guide-arrow-up { animation: bounceUp 1s ease-in-out infinite; }
+        @keyframes bounceDown { 0%,100% { transform: translateY(0); } 50% { transform: translateY(14px); } }
+        @keyframes bounceUp { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+    </style>
+
+    <script>
+    /* ================================================================
+       ZEDHOME CONFIG — edit these values
+       ================================================================ */
+    const CONFIG = {
+        // Your backend API (the Vercel server.js that proxies AliExpress).
+        // Leave empty ("") to run in DEMO mode with sample products.
+        API_BASE_URL: "https://zedhome-site.vercel.app",
+
+        USD_TO_ZMW: 27.5,                 // exchange rate USD → Kwacha
+        MARKUP_PERCENT: 30,               // company profit margin on every purchase
+        SERVICE_FEE_PERCENT: 5,           // fee shown at checkout (covers MoMo charges)
+        BUDGET_MAX_ZMW: 200,              // price ceiling for the "Home deals under K200" section
+        WHATSAPP_ORDERS: "260971234567",  // orders are also sent to this WhatsApp number
+        WHATSAPP_SUPPORT: "260971234567"  // customer support WhatsApp (floating button + support section)
+    };
+
+    /* ================================================================
+       DEMO PRODUCTS — home & kitchen for Zambia
+       (used when API_BASE_URL is empty or unreachable)
+       ================================================================ */
+    const DEMO_PRODUCTS = [
+        // Kitchen appliances
+        { id:"ka1", title:"Multifunction Kitchen Blender 2L Smoothie Ice Crusher 800W", priceUsd:18.00, oldUsd:36.00, rating:4.6, orders:8420, img:"https://picsum.photos/seed/blender/400/400" },
+        { id:"ka2", title:"Air Fryer 5L Digital Oil-Free Non-Stick Basket 1500W", priceUsd:32.00, oldUsd:64.00, rating:4.7, orders:11230, img:"https://picsum.photos/seed/airfryer/400/400" },
+        { id:"ka3", title:"Electric Kettle Stainless Steel 1.8L Fast Boil Auto Shut-Off", priceUsd:9.50, oldUsd:19.00, rating:4.6, orders:15640, img:"https://picsum.photos/seed/kettle/400/400" },
+        { id:"ka4", title:"Electric Rice Cooker 1.8L Non-Stick Keep-Warm 5 Cups", priceUsd:14.00, oldUsd:28.00, rating:4.5, orders:9310, img:"https://picsum.photos/seed/ricecooker/400/400" },
+        { id:"ka5", title:"Hand Mixer Electric 5-Speed Egg Beater Whisk 300W", priceUsd:8.00, oldUsd:16.00, rating:4.5, orders:6720, img:"https://picsum.photos/seed/handmixer/400/400" },
+        { id:"ka6", title:"Sandwich Maker Toaster Non-Stick Grill Plates 750W", priceUsd:11.00, oldUsd:22.00, rating:4.5, orders:5410, img:"https://picsum.photos/seed/sandwich/400/400" },
+        // Cookware & pots
+        { id:"cw1", title:"Non-Stick Cookware Set 10pcs Pots & Pans Granite Coating", priceUsd:34.00, oldUsd:70.00, rating:4.6, orders:7180, img:"https://picsum.photos/seed/cookware/400/400" },
+        { id:"cw2", title:"Cast Aluminium Frying Pan 28cm Deep Non-Stick Wok", priceUsd:9.90, oldUsd:20.00, rating:4.5, orders:12210, img:"https://picsum.photos/seed/frypan/400/400" },
+        { id:"cw3", title:"Stainless Steel Cooking Pot Set 3pcs with Glass Lids", priceUsd:16.00, oldUsd:33.00, rating:4.5, orders:6890, img:"https://picsum.photos/seed/pots/400/400" },
+        { id:"cw4", title:"Kitchen Knife Set 6pcs Stainless Steel with Block Stand", priceUsd:12.50, oldUsd:26.00, rating:4.6, orders:14320, img:"https://picsum.photos/seed/knives/400/400" },
+        // Small appliances
+        { id:"sa1", title:"Electric Coffee Maker Drip 600ml Reusable Filter Glass Jug", priceUsd:13.00, oldUsd:27.00, rating:4.4, orders:4980, img:"https://picsum.photos/seed/coffeemaker/400/400" },
+        { id:"sa2", title:"Handheld Garment Steamer Portable Travel Iron 1200W", priceUsd:10.50, oldUsd:22.00, rating:4.5, orders:8130, img:"https://picsum.photos/seed/steamer/400/400" },
+        { id:"sa3", title:"Rechargeable Stand Fan USB Desk Fan 3-Speed Quiet", priceUsd:12.00, oldUsd:25.00, rating:4.5, orders:10240, img:"https://picsum.photos/seed/fan/400/400" },
+        // Food storage
+        { id:"fs1", title:"Food Storage Containers Set 10pcs Airtight BPA-Free Clear", priceUsd:5.40, oldUsd:11.00, rating:4.6, orders:23110, img:"https://picsum.photos/seed/containers/400/400" },
+        { id:"fs2", title:"Vacuum Seal Reusable Food Bags 6pcs Fridge Freezer", priceUsd:3.80, oldUsd:8.00, rating:4.4, orders:17650, img:"https://picsum.photos/seed/foodbags/400/400" },
+        { id:"fs3", title:"Glass Meal Prep Containers 3pcs with Snap Lids Microwave Safe", priceUsd:5.20, oldUsd:11.00, rating:4.5, orders:9420, img:"https://picsum.photos/seed/mealprep/400/400" },
+        // Home decor
+        { id:"hd1", title:"3D Wall Stickers Peel & Stick Living Room Decor 10pcs", priceUsd:2.90, oldUsd:6.50, rating:4.4, orders:31240, img:"https://picsum.photos/seed/wallsticker/400/400" },
+        { id:"hd2", title:"Artificial Plant Potted Green Fake Fern Home Table Decor", priceUsd:4.20, oldUsd:9.00, rating:4.5, orders:14980, img:"https://picsum.photos/seed/plant/400/400" },
+        { id:"hd3", title:"Wall Clock Modern Silent Non-Ticking 30cm Living Room", priceUsd:7.50, oldUsd:15.00, rating:4.5, orders:8760, img:"https://picsum.photos/seed/clock/400/400" },
+        // Cleaning
+        { id:"cl1", title:"Kitchen Cleaning Brush Set 8pcs Scrubber Gap Sponge Combo", priceUsd:3.10, oldUsd:6.80, rating:4.5, orders:26540, img:"https://picsum.photos/seed/brushset/400/400" },
+        { id:"cl2", title:"Spin Mop & Bucket Set 360° Microfibre Floor Cleaner", priceUsd:14.50, oldUsd:29.00, rating:4.5, orders:11320, img:"https://picsum.photos/seed/spinmop/400/400" },
+        { id:"cl3", title:"Microfibre Cleaning Cloths 12-Pack Lint-Free Multi-Surface", priceUsd:4.00, oldUsd:8.50, rating:4.6, orders:19870, img:"https://picsum.photos/seed/cloths/400/400" },
+        // Bedding & textiles
+        { id:"bd1", title:"4-Piece Bedding Duvet Cover Set Soft Microfibre Queen", priceUsd:16.00, oldUsd:33.00, rating:4.6, orders:9120, img:"https://picsum.photos/seed/duvet/400/400" },
+        { id:"bd2", title:"Memory Foam Pillow 2-Pack Neck Support Breathable Cover", priceUsd:12.00, oldUsd:25.00, rating:4.5, orders:7640, img:"https://picsum.photos/seed/pillow/400/400" },
+        { id:"bd3", title:"Fleece Throw Blanket Soft Warm Sofa Bed 150x200cm", priceUsd:8.50, oldUsd:18.00, rating:4.6, orders:13450, img:"https://picsum.photos/seed/blanket/400/400" },
+        // Bathroom
+        { id:"br1", title:"Bathroom Organizer Rack 3-Tier Wall-Mount No-Drill Shelf", priceUsd:6.90, oldUsd:14.00, rating:4.5, orders:15210, img:"https://picsum.photos/seed/bathrack/400/400" },
+        { id:"br2", title:"Shower Curtain Waterproof Fabric with 12 Hooks 180x180cm", priceUsd:5.00, oldUsd:10.50, rating:4.4, orders:9870, img:"https://picsum.photos/seed/shower/400/400" },
+        // Organizers
+        { id:"og1", title:"Storage Organizer Boxes 4-Pack Foldable Fabric Cubes", priceUsd:5.60, oldUsd:12.00, rating:4.5, orders:18420, img:"https://picsum.photos/seed/organizer/400/400" },
+        { id:"og2", title:"Under-Sink Kitchen Organizer 2-Tier Sliding Drawer Rack", priceUsd:9.00, oldUsd:19.00, rating:4.5, orders:10230, img:"https://picsum.photos/seed/undersink/400/400" },
+        // Lighting
+        { id:"lt1", title:"LED Desk Lamp Dimmable USB Rechargeable Touch 3 Modes", priceUsd:7.20, oldUsd:15.00, rating:4.5, orders:12980, img:"https://picsum.photos/seed/desklamp/400/400" },
+        { id:"lt2", title:"Motion Sensor LED Night Light 3-Pack Rechargeable Cabinet", priceUsd:4.50, oldUsd:9.50, rating:4.5, orders:16540, img:"https://picsum.photos/seed/nightlight/400/400" }
+    ];
+
+    /* ================================================================
+       STATE
+       ================================================================ */
+    let products = [];
+    let cart = JSON.parse(localStorage.getItem('zedhome_cart') || '[]');
+    let currentProduct = null;
+    let pmQtyCount = 1;
+    let selectedProvider = null;
+    // Pagination state for infinite scroll
+    let currentQuery = '';
+    let currentBudget = false;
+    let currentPage = 1;
+    let apiMode = false;      // true when the current results came from the live API (paginate)
+    let hasMore = false;      // is there likely another page of results
+    let loadingMore = false;
+
+    /* ================================================================
+       HELPERS
+       ================================================================ */
+    const $ = id => document.getElementById(id);
+    const usdToKwacha = usd => usd * CONFIG.USD_TO_ZMW * (1 + CONFIG.MARKUP_PERCENT / 100);
+    const fmtK = n => 'K' + n.toLocaleString('en-ZM', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    function showToast(msg) {
+        const t = $('toast');
+        t.textContent = msg;
+        t.classList.remove('hidden');
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => t.classList.add('hidden'), 2500);
+    }
+
+    function setStatus(loading, text) {
+        $('statusBox').classList.toggle('hidden', !loading);
+        $('productGrid').classList.toggle('hidden', loading);
+        if (text) $('statusText').textContent = text;
+    }
+
+    /* ================================================================
+       PRODUCT LOADING — API with demo fallback
+       ================================================================ */
+    // Normalizes many possible AliExpress-API response shapes into one format.
+    // Prices: if the backend already returns Kwacha (priceZMW) we use it as-is;
+    // otherwise we treat the price as USD and convert with markup.
+    function normalizeApiProduct(p, i) {
+        const title = p.title || p.product_title || p.name || p.subject || 'Product';
+        const rawZmw = p.priceZMW || p.price_zmw || p.priceKwacha || 0;
+        const priceZmwDirect = parseFloat(String(rawZmw).replace(/[^0-9.]/g, '')) || 0;
+        const rawPrice = p.price || p.sale_price || p.app_sale_price || p.target_sale_price ||
+                         (p.prices && (p.prices.sale_price || p.prices.salePrice)) || p.min_price || 0;
+        const priceUsd = parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) || 0;
+        const rawOld = p.original_price || p.originalPrice || p.old_price || 0;
+        const oldUsd = parseFloat(String(rawOld).replace(/[^0-9.]/g, '')) || 0;
+        const img = p.image || p.product_main_image_url || p.main_image || p.img || p.imageUrl ||
+                    (p.images && p.images[0]) || 'https://picsum.photos/seed/zh' + i + '/400/400';
+        return {
+            id: String(p.product_id || p.productId || p.item_id || p.id || 'api' + i),
+            title,
+            priceZmw: priceZmwDirect || usdToKwacha(priceUsd || 5),
+            oldZmw: oldUsd ? usdToKwacha(oldUsd) : 0,
+            rating: parseFloat(p.evaluate_rate || p.rating || p.score) || (4 + Math.round(((i * 37) % 10)) / 10 * 0.9),
+            orders: parseInt(p.orders || p.sale_count || p.volume || p.lastest_volume) || 0,
+            img: String(img).startsWith('//') ? 'https:' + img : img
+        };
+    }
+
+    function extractApiList(data) {
+        if (Array.isArray(data)) return data;
+        const candidates = [
+            data.products, data.items, data.result, data.docs, data.data,
+            data.data && data.data.products, data.data && data.data.items,
+            data.result && data.result.products, data.result && data.result.items,
+            data.result && data.result.resultList
+        ];
+        for (const c of candidates) if (Array.isArray(c) && c.length) return c;
+        return [];
+    }
+
+    const normalizeDemo = p => ({ ...p, priceZmw: usdToKwacha(p.priceUsd), oldZmw: p.oldUsd ? usdToKwacha(p.oldUsd) : 0 });
+
+    // Budget items need a price-ascending search — a regular search rarely
+    // returns anything cheap enough for the budget ceiling (incl. markup).
+    // Cached so the home strip and the budget view share one API call.
+    // The K10 floor drops junk/placeholder listings.
+    let budgetCache = null;
+    async function fetchBudget() {
+        if (budgetCache && budgetCache.length) return budgetCache;
+        if (!CONFIG.API_BASE_URL) return null;
+        try {
+            const url = CONFIG.API_BASE_URL.replace(/\/$/, '') + '/api/products?q='
+                + encodeURIComponent('kitchen gadget storage organizer cleaning home') + '&sort=priceAsc';
+            const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
+            const raw = extractApiList(await res.json());
+            budgetCache = raw.map((p, i) => normalizeApiProduct(p, i))
+                .filter(p => p.priceZmw >= 10 && p.priceZmw <= CONFIG.BUDGET_MAX_ZMW);
+        } catch (e) {
+            console.warn('Budget fetch failed:', e);
+        }
+        return budgetCache;
+    }
+
+    // Fetches one page of API results for a query. Returns the raw product array.
+    async function fetchApiPage(query, page) {
+        try {
+            const apiQuery = query || 'kitchen cookware home appliance';
+            const url = CONFIG.API_BASE_URL.replace(/\/$/, '') + '/api/products?q='
+                + encodeURIComponent(apiQuery) + '&page=' + page;
+            const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
+            return extractApiList(await res.json());
+        } catch (e) {
+            console.warn('API page fetch failed:', e);
+            return null;
+        }
+    }
+
+    async function loadProducts(query, budgetOnly) {
+        // Reset pagination for a fresh search / category / home load
+        currentQuery = query || '';
+        currentBudget = !!budgetOnly;
+        currentPage = 1;
+        apiMode = false;
+        hasMore = false;
+        loadingMore = false;
+        hideLoadMore();
+
+        setStatus(true, budgetOnly ? 'Finding deals under K' + CONFIG.BUDGET_MAX_ZMW + '...' : (query ? `Searching for "${query}"...` : 'Loading trending home essentials...'));
+        let list = null;
+
+        if (budgetOnly) {
+            list = await fetchBudget();
+        } else if (CONFIG.API_BASE_URL) {
+            const raw = await fetchApiPage(query, 1);
+            if (raw && raw.length) {
+                list = raw.map(normalizeApiProduct);
+                apiMode = true;              // real API results → enable infinite scroll
+                hasMore = raw.length >= 15;  // a full page suggests more pages exist
+            }
+        }
+
+        if (!list || !list.length) {
+            // Demo mode: simple client-side filter
+            let demo = query
+                ? DEMO_PRODUCTS.filter(p => p.title.toLowerCase().includes(query.toLowerCase().split(' ')[0]))
+                : DEMO_PRODUCTS;
+            if (!demo.length) demo = DEMO_PRODUCTS;
+            list = demo.map(normalizeDemo);
+            if (budgetOnly) list = list.filter(p => p.priceZmw <= CONFIG.BUDGET_MAX_ZMW);
+        }
+
+        products = list;
+        renderProducts(query, budgetOnly, false);
+        setStatus(false);
+        updateLoadMore();
+    }
+
+    // Loads the next page and appends it — driven by the scroll sentinel and the
+    // manual "Show more" button. Only runs for live API results (not demo/budget).
+    async function loadMoreProducts() {
+        if (!apiMode || currentBudget || loadingMore || !hasMore) return;
+        loadingMore = true;
+        const btn = $('loadMoreBtn');
+        btn.classList.add('opacity-60');
+        btn.innerHTML = '<span class="spinner inline-block !w-4 !h-4 !border-2 align-middle mr-2"></span> Loading more…';
+
+        const raw = await fetchApiPage(currentQuery, currentPage + 1) || [];
+        const fresh = raw.map(normalizeApiProduct).filter(p => !products.find(x => x.id === p.id));
+
+        if (fresh.length) {
+            currentPage += 1;
+            products = products.concat(fresh);
+            renderProducts(currentQuery, currentBudget, true, fresh);
+            hasMore = raw.length >= 15;
+        } else {
+            hasMore = false;
+        }
+
+        loadingMore = false;
+        btn.classList.remove('opacity-60');
+        btn.innerHTML = '<i class="fas fa-plus mr-1"></i> Show more products';
+        updateLoadMore();
+    }
+
+    function updateLoadMore() {
+        $('loadMoreWrap').classList.toggle('hidden', !(apiMode && hasMore && !currentBudget));
+    }
+    function hideLoadMore() {
+        $('loadMoreWrap').classList.add('hidden');
+    }
+
+    function productCardHtml(p) {
+        const price = p.priceZmw;
+        const oldPrice = p.oldZmw || 0;
+        const discount = oldPrice > price ? Math.round((1 - price / oldPrice) * 100) : 0;
+        return `
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer group fade-in" onclick="openProduct('${p.id}')">
+                <div class="relative">
+                    <img src="${p.img}" alt="" loading="lazy" class="w-full aspect-square object-cover bg-glow-50 group-hover:scale-105 transition duration-300"
+                         onerror="this.src='https://picsum.photos/seed/fallback${p.id}/400/400'">
+                    ${discount ? `<span class="absolute top-2 left-2 bg-zam-red text-white text-[10px] font-bold px-2 py-0.5 rounded-full">-${discount}%</span>` : ''}
+                </div>
+                <div class="p-3">
+                    <p class="text-xs sm:text-sm text-slate-600 leading-snug line-clamp-2 h-9">${p.title}</p>
+                    <div class="mt-2 flex items-baseline gap-1.5 flex-wrap">
+                        <span class="font-extrabold text-glow-700">${fmtK(price)}</span>
+                        ${oldPrice > price ? `<span class="text-[11px] text-slate-400 line-through">${fmtK(oldPrice)}</span>` : ''}
+                    </div>
+                    <div class="mt-1 flex items-center justify-between text-[11px] text-slate-400">
+                        <span><i class="fas fa-star text-yellow-400"></i> ${Number(p.rating).toFixed(1)}</span>
+                        ${p.orders ? `<span>${p.orders.toLocaleString()} sold</span>` : ''}
+                    </div>
+                    <button onclick="event.stopPropagation(); addToCart('${p.id}', 1)"
+                        class="mt-2 w-full bg-glow-50 text-glow-700 hover:bg-glow-600 hover:text-white text-xs font-bold py-2 rounded-xl transition">
+                        <i class="fas fa-cart-plus mr-1"></i>Add to cart
+                    </button>
+                </div>
+            </div>`;
+    }
+
+    function renderProducts(query, budgetOnly, append, appendItems) {
+        if (append) {
+            // Append the next page without rebuilding the grid (keeps scroll position)
+            $('productGrid').insertAdjacentHTML('beforeend', (appendItems || []).map(productCardHtml).join(''));
+            $('resultsCount').textContent = products.length + ' products';
+            return;
+        }
+        $('resultsTitle').textContent = budgetOnly ? `Home deals under K${CONFIG.BUDGET_MAX_ZMW}`
+            : (query ? `Results for "${query}"` : 'Trending home & kitchen in Zambia');
+        $('resultsCount').textContent = products.length + ' products';
+        renderBudgetStrip(!query && !budgetOnly);
+        $('productGrid').innerHTML = products.map(productCardHtml).join('');
+        window.scrollTo({ top: (query || budgetOnly) ? $('heroSection').offsetHeight : 0, behavior: 'smooth' });
+    }
+
+    async function renderBudgetStrip(show) {
+        const strip = $('budgetStrip');
+        if (!show) { strip.classList.add('hidden'); return; }
+
+        let cheap = products.filter(p => p.priceZmw <= CONFIG.BUDGET_MAX_ZMW);
+        if (cheap.length < 4) {
+            // The home list mixes small & bigger items — fetch the real price-sorted
+            // budget list from the API (demo items as last resort)
+            const fetched = await fetchBudget();
+            cheap = (fetched && fetched.length)
+                ? fetched
+                : DEMO_PRODUCTS.map(normalizeDemo).filter(p => p.priceZmw <= CONFIG.BUDGET_MAX_ZMW);
+            // Register them in `products` so clicks and add-to-cart still work
+            cheap.forEach(p => { if (!products.find(x => x.id === p.id)) products.push(p); });
+        }
+        if (!cheap.length) { strip.classList.add('hidden'); return; }
+
+        $('budgetRow').innerHTML = cheap.slice(0, 10).map(p => `
+            <div class="shrink-0 w-32 sm:w-36 bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer" onclick="openProduct('${p.id}')">
+                <img src="${p.img}" alt="" loading="lazy" class="w-full aspect-square object-cover bg-glow-50"
+                     onerror="this.src='https://picsum.photos/seed/b${p.id}/200/200'">
+                <div class="p-2">
+                    <p class="text-[11px] text-slate-600 leading-snug line-clamp-2 h-7">${p.title}</p>
+                    <p class="font-extrabold text-sm text-glow-700 mt-1">${fmtK(p.priceZmw)}</p>
+                </div>
+            </div>`).join('');
+        strip.classList.remove('hidden');
+    }
+
+    /* ================================================================
+       SEARCH
+       ================================================================ */
+    function showBudget() {
+        $('searchInput').value = '';
+        loadProducts('', true);
+    }
+    function doSearch() {
+        const q = $('searchInput').value.trim();
+        loadProducts(q);
+    }
+    function searchCategory(q) {
+        $('searchInput').value = q;
+        loadProducts(q);
+    }
+    function goHome() {
+        $('searchInput').value = '';
+        loadProducts('');
+    }
+
+    /* ================================================================
+       PRODUCT MODAL
+       ================================================================ */
+    function openProduct(id) {
+        currentProduct = products.find(p => p.id === id);
+        if (!currentProduct) return;
+        pmQtyCount = 1;
+        $('pmQtyVal').textContent = 1;
+        $('pmImage').src = currentProduct.img;
+        $('pmTitle').textContent = currentProduct.title;
+        const stars = Math.round(currentProduct.rating);
+        $('pmRating').innerHTML = '★'.repeat(stars) + '<span class="text-slate-300">' + '★'.repeat(5 - stars) + '</span>' +
+            ` <span class="text-slate-400 text-xs">${Number(currentProduct.rating).toFixed(1)}</span>`;
+        $('pmPrice').textContent = fmtK(currentProduct.priceZmw);
+        $('pmOldPrice').textContent = currentProduct.oldZmw ? fmtK(currentProduct.oldZmw) : '';
+        $('pmOrders').textContent = currentProduct.orders ? currentProduct.orders.toLocaleString() + ' orders shipped' : '';
+        $('pmAddBtn').onclick = () => { addToCart(currentProduct.id, pmQtyCount); closeProduct(); };
+        $('productModal').classList.remove('hidden');
+        $('productModal').classList.add('flex');
+    }
+    function closeProduct() {
+        $('productModal').classList.add('hidden');
+        $('productModal').classList.remove('flex');
+    }
+    function pmQty(d) {
+        pmQtyCount = Math.max(1, Math.min(20, pmQtyCount + d));
+        $('pmQtyVal').textContent = pmQtyCount;
+    }
+
+    /* ================================================================
+       CART
+       ================================================================ */
+    function saveCart() {
+        localStorage.setItem('zedhome_cart', JSON.stringify(cart));
+        renderCart();
+    }
+
+    function addToCart(id, qty) {
+        const p = products.find(x => x.id === id);
+        if (!p) return;
+        const existing = cart.find(x => x.id === id);
+        if (existing) existing.qty += qty;
+        else cart.push({ id: p.id, title: p.title, priceZmw: p.priceZmw, img: p.img, qty });
+        saveCart();
+        showToast('✅ Added to cart');
+    }
+
+    function changeQty(id, d) {
+        const item = cart.find(x => x.id === id);
+        if (!item) return;
+        item.qty += d;
+        if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
+        saveCart();
+    }
+
+    function removeFromCart(id) {
+        cart = cart.filter(x => x.id !== id);
+        saveCart();
+    }
+
+    // Older saved carts stored priceUsd; convert on the fly so they still work
+    const itemZmw = i => i.priceZmw != null ? i.priceZmw : usdToKwacha(i.priceUsd || 0);
+
+    function cartTotals() {
+        const subtotal = cart.reduce((s, i) => s + itemZmw(i) * i.qty, 0);
+        const fees = subtotal * CONFIG.SERVICE_FEE_PERCENT / 100;
+        return { subtotal, fees, total: subtotal + fees };
+    }
+
+    function renderCart() {
+        const count = cart.reduce((s, i) => s + i.qty, 0);
+        $('cartCount').textContent = count;
+        $('cartCount').classList.toggle('hidden', count === 0);
+
+        if (!cart.length) {
+            $('cartItems').innerHTML = `<div class="text-center text-slate-400 py-16">
+                <i class="fas fa-cart-shopping text-4xl mb-3"></i><p class="text-sm">Your cart is empty</p></div>`;
+        } else {
+            $('cartItems').innerHTML = cart.map(i => `
+            <div class="flex gap-3 bg-glow-50 rounded-xl p-3">
+                <img src="${i.img}" class="w-16 h-16 rounded-lg object-cover bg-glow-100" onerror="this.src='https://picsum.photos/seed/c${i.id}/100/100'">
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs text-slate-600 line-clamp-2">${i.title}</p>
+                    <div class="flex items-center justify-between mt-2">
+                        <span class="font-bold text-sm text-glow-700">${fmtK(itemZmw(i) * i.qty)}</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeQty('${i.id}',-1)" class="w-6 h-6 bg-white border rounded-md text-slate-500 hover:text-glow-600 text-sm">−</button>
+                            <span class="text-sm font-bold w-4 text-center">${i.qty}</span>
+                            <button onclick="changeQty('${i.id}',1)" class="w-6 h-6 bg-white border rounded-md text-slate-500 hover:text-glow-600 text-sm">+</button>
+                            <button onclick="removeFromCart('${i.id}')" class="text-slate-300 hover:text-zam-red ml-1"><i class="fas fa-trash-can text-xs"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>`).join('');
+        }
+
+        const t = cartTotals();
+        $('cartSubtotal').textContent = fmtK(t.subtotal);
+        $('cartFees').textContent = fmtK(t.fees);
+        $('cartTotal').textContent = fmtK(t.total);
+        $('checkoutBtn').disabled = !cart.length;
+    }
+
+    function toggleCart(open) {
+        $('cartOverlay').classList.toggle('hidden', !open);
+        $('cartDrawer').classList.toggle('translate-x-full', !open);
+        if (open) renderCart();
+    }
+
+    /* ================================================================
+       CHECKOUT — Mobile Money flow
+       (wired to pawaPay in the backend; falls back to simulation when
+        the backend runs without a PAWAPAY_TOKEN)
+       ================================================================ */
+    function openCheckout() {
+        if (!cart.length) return;
+        toggleCart(false);
+        selectedProvider = null;
+        document.querySelectorAll('.provider-btn').forEach(b => b.classList.remove('selected'));
+        $('payError').classList.add('hidden');
+        $('payTotal').textContent = fmtK(cartTotals().total);
+        $('payStep1').classList.remove('hidden');
+        $('payStep2').classList.add('hidden');
+        $('payStep3').classList.add('hidden');
+        $('checkoutModal').classList.remove('hidden');
+        $('checkoutModal').classList.add('flex');
+    }
+
+    function closeCheckout() {
+        $('checkoutModal').classList.add('hidden');
+        $('checkoutModal').classList.remove('flex');
+    }
+
+    function selectProvider(p, btn) {
+        selectedProvider = p;
+        document.querySelectorAll('.provider-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+    }
+
+    // Attempts a real mobile money charge through the backend (pawaPay).
+    // Returns true on confirmed payment, 'failed' on decline/timeout, or
+    // null when the backend runs in simulated mode / is unreachable.
+    async function tryRealPayment(order) {
+        if (!CONFIG.API_BASE_URL) return null;
+        const base = CONFIG.API_BASE_URL.replace(/\/$/, '');
+        try {
+            const res = await fetch(base + '/api/pay', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    phone: order.phone,
+                    network: order.provider,
+                    amount: Math.round(order.total * 100) / 100,
+                    name: order.name
+                }),
+                signal: AbortSignal.timeout(30000)
+            });
+            const data = await res.json();
+            if (!res.ok || data.simulated || !data.tx_ref) return null;
+
+            // Poll for up to ~2 minutes while the customer approves on their phone
+            for (let i = 0; i < 24; i++) {
+                await new Promise(r => setTimeout(r, 5000));
+                try {
+                    const s = await fetch(base + '/api/pay/status?tx_ref=' + encodeURIComponent(data.tx_ref),
+                        { signal: AbortSignal.timeout(15000) }).then(r => r.json());
+                    if (s.status === 'successful') return true;
+                    if (s.status === 'failed' || s.status === 'cancelled') return 'failed';
+                } catch (e) { /* transient poll error - keep waiting */ }
+            }
+            return 'failed';
+        } catch (e) {
+            console.warn('Real payment unavailable, using simulation:', e);
+            return null;
+        }
+    }
+
+    async function submitPayment() {
+        const phone = $('payPhone').value.trim();
+        const name = $('payName').value.trim();
+        const address = $('payAddress').value.trim();
+        const err = $('payError');
+
+        if (!selectedProvider) { err.textContent = 'Please choose your mobile network.'; err.classList.remove('hidden'); return; }
+        if (!/^(9|7)\d{8}$/.test(phone)) { err.textContent = 'Enter a valid Zambian number, e.g. 971234567.'; err.classList.remove('hidden'); return; }
+        if (name.length < 3) { err.textContent = 'Please enter your full name.'; err.classList.remove('hidden'); return; }
+        if (address.length < 5) { err.textContent = 'Please enter your delivery address.'; err.classList.remove('hidden'); return; }
+        err.classList.add('hidden');
+
+        const t = cartTotals();
+        const order = { provider: selectedProvider, phone, name, address, total: t.total };
+        $('pay2Total').textContent = fmtK(t.total);
+        $('pay2Phone').textContent = '+260 ' + phone;
+        $('payStep1').classList.add('hidden');
+        $('payStep2').classList.remove('hidden');
+
+        const outcome = await tryRealPayment(order);
+
+        if (outcome === 'failed') {
+            $('payStep2').classList.add('hidden');
+            $('payStep1').classList.remove('hidden');
+            err.textContent = 'The payment was not completed. Please check your phone and try again.';
+            err.classList.remove('hidden');
+            return;
+        }
+
+        // Simulated mode keeps a short "check your phone" pause for realism
+        if (outcome !== true) await new Promise(r => setTimeout(r, 4000));
+
+        const ref = 'ZH' + String(Math.floor(100000 + Math.random() * 900000));
+        $('orderRef').textContent = '#' + ref;
+        $('payStep2').classList.add('hidden');
+        $('payStep3').classList.remove('hidden');
+        sendOrderToWhatsApp(ref, order);
+    }
+
+    // Real AliExpress products use the numeric itemId as their id, so we can
+    // rebuild a direct product link for one-tap re-ordering. Demo products
+    // (ids like "w1") have no real listing, so they get no link.
+    const aliLink = id => /^\d{6,}$/.test(String(id))
+        ? 'https://www.aliexpress.com/item/' + id + '.html'
+        : null;
+
+    function sendOrderToWhatsApp(ref, o) {
+        // Opens WhatsApp with the full order summary — including a DIRECT
+        // AliExpress link for each item — so you can re-order in one tap.
+        if (!CONFIG.WHATSAPP_ORDERS) return;
+        const itemLines = cart.flatMap(i => {
+            const link = aliLink(i.id);
+            const head = `• ${i.qty}x ${i.title} — ${fmtK(itemZmw(i) * i.qty)}`;
+            return link ? [head, `   🔗 ${link}`] : [head];
+        });
+        const lines = [
+            `🏠 *New ZedHome Order ${'#' + ref}*`,
+            `👤 ${o.name}`,
+            `📞 +260${o.phone} (${o.provider.toUpperCase()})`,
+            `📍 ${o.address}`,
+            ``,
+            `🛒 *Order — tap each link to buy on AliExpress:*`,
+            ...itemLines,
+            ``,
+            `💰 *Customer paid: ${fmtK(o.total)}*`
+        ];
+        const url = 'https://wa.me/' + CONFIG.WHATSAPP_ORDERS + '?text=' + encodeURIComponent(lines.join('\n'));
+        window.open(url, '_blank');
+    }
+
+    function finishOrder() {
+        cart = [];
+        saveCart();
+        closeCheckout();
+        showToast('🎉 Thank you for shopping with ZedHome!');
+    }
+
+    /* ================================================================
+       DOWNLOAD APP (PWA install) — Android gets the native prompt when
+       available; otherwise arrow-guided instructions per platform.
+       ================================================================ */
+    let deferredInstallPrompt = null;
+    const IS_IOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const IS_MOBILE = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+    const IS_INSTALLED = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const INSTALL_SNOOZE_MS = 3 * 24 * 60 * 60 * 1000;
+
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+
+    window.addEventListener('beforeinstallprompt', e => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        showInstallBanner();
+    });
+
+    function showInstallBanner() {
+        if (IS_INSTALLED || !IS_MOBILE) return;
+        const snoozedAt = parseInt(localStorage.getItem('zedhome_install_snooze') || '0');
+        if (Date.now() - snoozedAt < INSTALL_SNOOZE_MS) return;
+        $('installBanner').classList.remove('hidden');
+        document.body.classList.add('has-install-banner');
+    }
+
+    function hideInstallBanner() {
+        $('installBanner').classList.add('hidden');
+        document.body.classList.remove('has-install-banner');
+    }
+
+    function dismissInstall() {
+        localStorage.setItem('zedhome_install_snooze', String(Date.now()));
+        hideInstallBanner();
+    }
+
+    async function installApp() {
+        if (deferredInstallPrompt) {
+            deferredInstallPrompt.prompt();
+            await deferredInstallPrompt.userChoice;
+            deferredInstallPrompt = null;
+            hideInstallBanner();
+            return;
+        }
+        // No native prompt (iPhone always, some Android browsers) — show
+        // the arrow-guided instructions for this platform
+        $('guideIos').classList.toggle('hidden', !IS_IOS);
+        $('guideAndroid').classList.toggle('hidden', IS_IOS);
+        $('installGuide').classList.remove('hidden');
+    }
+
+    function closeInstallGuide() {
+        $('installGuide').classList.add('hidden');
+    }
+
+    // iPhone never fires beforeinstallprompt — offer the banner directly
+    if (IS_MOBILE && !IS_INSTALLED) setTimeout(showInstallBanner, 3000);
+
+    /* ================================================================
+       INIT
+       ================================================================ */
+    (function initSupportLinks() {
+        const msg = encodeURIComponent('Hello ZedHome! 👋 I need some help with my order.');
+        const wa = 'https://wa.me/' + CONFIG.WHATSAPP_SUPPORT + '?text=' + msg;
+        $('waSupportBtn').href = wa;
+    })();
+
+    // Infinite scroll: when the sentinel near the page bottom enters view, load the next page
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver(entries => {
+            if (entries.some(e => e.isIntersecting)) loadMoreProducts();
+        }, { rootMargin: '700px' }).observe($('loadMoreSentinel'));
+    }
+
+    renderCart();
+    loadProducts('');
+    </script>
+</body>
+</html>
