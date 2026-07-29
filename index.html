@@ -197,7 +197,7 @@
             <p id="statusText" class="mt-4 text-slate-500 text-sm">Loading home essentials...</p>
         </div>
 
-        <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4"></div>
+        <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5 sm:gap-3"></div>
 
         <!-- Infinite scroll: sentinel auto-loads the next page; button is a manual fallback -->
         <div id="loadMoreWrap" class="hidden text-center py-8">
@@ -858,16 +858,16 @@
         const oldPrice = p.oldZmw || 0;
         const discount = oldPrice > price ? Math.round((1 - price / oldPrice) * 100) : 0;
         return `
-            <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer group fade-in" onclick="openProduct('${p.id}')">
+            <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer group fade-in" onclick="openProduct('${p.id}')">
                 <div class="relative">
                     <img src="${p.img}" alt="" loading="lazy" class="w-full aspect-square object-cover bg-glow-50 group-hover:scale-105 transition duration-300"
                          onerror="this.src='https://picsum.photos/seed/fallback${p.id}/400/400'">
                     ${discount ? `<span class="absolute top-2 left-2 bg-zam-red text-white text-[10px] font-bold px-2 py-0.5 rounded-full">-${discount}%</span>` : ''}
                 </div>
-                <div class="p-3">
-                    <p class="text-xs sm:text-sm text-slate-600 leading-snug line-clamp-2 h-9">${p.title}</p>
+                <div class="p-2.5">
+                    <p class="text-[11px] sm:text-xs text-slate-600 leading-snug line-clamp-2 h-8">${p.title}</p>
                     <div class="mt-2 flex items-baseline gap-1.5 flex-wrap">
-                        <span class="font-extrabold text-glow-700">${fmtK(price)}</span>
+                        <span class="font-extrabold text-sm text-glow-700">${fmtK(price)}</span>
                         ${oldPrice > price ? `<span class="text-[11px] text-slate-400 line-through">${fmtK(oldPrice)}</span>` : ''}
                     </div>
                     <div class="mt-1 flex items-center justify-between text-[11px] text-slate-400">
@@ -875,7 +875,7 @@
                         ${p.orders ? `<span>${p.orders.toLocaleString()} sold</span>` : ''}
                     </div>
                     <button onclick="event.stopPropagation(); addToCart('${p.id}', 1)"
-                        class="mt-2 w-full bg-glow-50 text-glow-700 hover:bg-glow-600 hover:text-white text-xs font-bold py-2 rounded-xl transition">
+                        class="mt-2 w-full bg-glow-50 text-glow-700 hover:bg-glow-600 hover:text-white text-[11px] font-bold py-1.5 rounded-lg transition">
                         <i class="fas fa-cart-plus mr-1"></i>Add to cart
                     </button>
                 </div>
