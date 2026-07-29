@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orders · Zed Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root { --bg:#0b1220; --card:#141c2e; --line:#243049; --txt:#e2e8f0; --mut:#94a3b8; --accent:#3b82f6; --ok:#22c55e; --warn:#f59e0b; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--txt); font-family:system-ui,'Segoe UI',Arial,sans-serif; }
+  header { display:flex; align-items:center; gap:12px; padding:14px 18px; border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--bg); z-index:5; flex-wrap:wrap; }
+  header h1 { font-size:17px; margin:0; font-weight:800; }
+  header h1 span { color:var(--accent); }
+  .sp { flex:1; }
+  select, button, input { font:inherit; }
+  select, input { background:var(--card); color:var(--txt); border:1px solid var(--line); border-radius:9px; padding:9px 11px; }
+  button { background:var(--accent); color:#fff; border:0; border-radius:9px; padding:9px 14px; font-weight:700; cursor:pointer; }
+  button.ghost { background:transparent; border:1px solid var(--line); color:var(--mut); }
+  .wrap { padding:18px; max-width:1200px; margin:0 auto; }
+  .muted { color:var(--mut); }
+  /* login */
+  #login { max-width:360px; margin:12vh auto; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:26px; }
+  #login h2 { margin:0 0 4px; }
+  #login input { width:100%; margin-top:10px; }
+  #login button { width:100%; margin-top:12px; }
+  #authMsg { color:#f87171; font-size:13px; min-height:18px; margin-top:8px; }
+  /* orders */
+  .stat { display:inline-block; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:8px 14px; margin-right:8px; }
+  .stat b { font-size:18px; }
+  table { width:100%; border-collapse:collapse; margin-top:14px; font-size:13.5px; }
+  th, td { text-align:left; padding:10px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--mut); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+  tr:hover td { background:#0f1728; }
+  .items { margin:0; padding-left:16px; }
+  .items a { color:var(--accent); text-decoration:none; }
+  .items a:hover { text-decoration:underline; }
+  .badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:700; background:#1e293b; color:var(--mut); }
+  .total { font-weight:800; white-space:nowrap; }
+  .store-tag { font-size:11px; font-weight:800; color:var(--accent); }
+  .hidden { display:none !important; }
+  @media (max-width:720px){ table,thead,tbody,th,td,tr{display:block} thead{display:none} td{border:0;padding:4px 0} tr{border-bottom:1px solid var(--line);padding:12px 0} td::before{content:attr(data-l);color:var(--mut);font-size:11px;display:block;text-transform:uppercase} }
+</style>
+</head>
+<body>
+
+<div id="login">
+  <h2>Zed <span style="color:#3b82f6">Orders</span></h2>
+  <p class="muted" style="font-size:13px;margin:2px 0 0">Admin sign-in</p>
+  <input id="email" type="email" placeholder="Email" autocomplete="username">
+  <input id="pass" type="password" placeholder="Password" autocomplete="current-password">
+  <button onclick="signIn()">Sign in</button>
+  <button class="ghost" style="background:transparent;border:1px solid var(--line);color:var(--mut)" onclick="signUp()">Create admin account</button>
+  <div id="authMsg"></div>
+</div>
+
+<div id="app" class="hidden">
+  <header>
+    <h1>Zed <span>Orders</span></h1>
+    <select id="storeFilter" onchange="render()">
+      <option value="">All stores</option>
+      <option value="zedtech">ZedTech</option>
+      <option value="zedmall">ZedMall</option>
+      <option value="zedglow">ZedGlow</option>
+      <option value="zedhome">ZedHome</option>
+      <option value="zedsolar">ZedSolar</option>
+      <option value="zedbaby">ZedBaby</option>
+    </select>
+    <select id="statusFilter" onchange="render()">
+      <option value="">All statuses</option>
+      <option value="new">New</option>
+      <option value="ordered">Ordered</option>
+      <option value="shipped">Shipped</option>
+      <option value="delivered">Delivered</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+    <div class="sp"></div>
+    <span id="who" class="muted" style="font-size:13px"></span>
+    <button class="ghost" style="background:transparent;border:1px solid var(--line);color:var(--mut)" onclick="fb.auth().signOut()">Sign out</button>
+  </header>
+  <div class="wrap">
+    <div id="stats"></div>
+    <div id="tableWrap"></div>
+    <p id="empty" class="muted hidden" style="text-align:center;padding:40px">No orders yet.</p>
+    <p id="denied" class="hidden" style="color:#f87171;text-align:center;padding:40px">This account is not authorised to view orders. Sign in with the admin email.</p>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+const FIREBASE = {
+  apiKey: "AIzaSyAqkEfNwKZzofId0XCGcs17sVFh5NYryrM",
+  authDomain: "zedmall-4301c.firebaseapp.com",
+  projectId: "zedmall-4301c",
+  storageBucket: "zedmall-4301c.firebasestorage.app",
+  messagingSenderId: "24400915808",
+  appId: "1:24400915808:web:cd5675e846250c4e808205"
+};
+const fb = firebase.initializeApp(FIREBASE);
+const db = firebase.firestore();
+const $ = id => document.getElementById(id);
+let ORDERS = [];
+const STATUSES = ['new','ordered','shipped','delivered','cancelled'];
+const K = n => 'K' + (Number(n)||0).toLocaleString('en-ZM',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+function msg(t){ $('authMsg').textContent = t || ''; }
+function signIn(){ msg(''); fb.auth().signInWithEmailAndPassword($('email').value.trim(), $('pass').value).catch(e=>msg(e.message)); }
+function signUp(){ msg(''); fb.auth().createUserWithEmailAndPassword($('email').value.trim(), $('pass').value).catch(e=>msg(e.message)); }
+
+fb.auth().onAuthStateChanged(u => {
+  if (!u) { $('login').classList.remove('hidden'); $('app').classList.add('hidden'); return; }
+  $('login').classList.add('hidden'); $('app').classList.remove('hidden');
+  $('who').textContent = u.email;
+  subscribe();
+});
+
+let unsub = null;
+function subscribe(){
+  if (unsub) unsub();
+  unsub = db.collection('orders').orderBy('createdAt','desc').limit(500).onSnapshot(
+    snap => { ORDERS = snap.docs.map(d => ({ id:d.id, ...d.data() })); $('denied').classList.add('hidden'); render(); },
+    err => { console.warn(err); if (String(err.code).includes('permission')) { $('denied').classList.remove('hidden'); $('tableWrap').innerHTML=''; $('stats').innerHTML=''; } }
+  );
+}
+
+function fmtDate(ts){ try { const d = ts && ts.toDate ? ts.toDate() : null; return d ? d.toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '—'; } catch(e){ return '—'; } }
+
+function setStatus(id, val){ db.collection('orders').doc(id).update({ status: val }).catch(e=>alert(e.message)); }
+
+function render(){
+  const sf = $('storeFilter').value, stf = $('statusFilter').value;
+  let list = ORDERS.filter(o => (!sf || o.store===sf) && (!stf || (o.status||'new')===stf));
+  const nNew = ORDERS.filter(o => (o.status||'new')==='new').length;
+  const revenue = ORDERS.filter(o=>(o.status||'')!=='cancelled').reduce((s,o)=>s+(Number(o.total)||0),0);
+  $('stats').innerHTML =
+    `<span class="stat">Total orders <b>${ORDERS.length}</b></span>`+
+    `<span class="stat">New <b style="color:var(--warn)">${nNew}</b></span>`+
+    `<span class="stat">Revenue <b style="color:var(--ok)">${K(revenue)}</b></span>`;
+  $('empty').classList.toggle('hidden', list.length>0);
+  if (!list.length){ $('tableWrap').innerHTML=''; return; }
+  $('tableWrap').innerHTML = `<table><thead><tr>
+    <th>Date</th><th>Store</th><th>Ref</th><th>Customer</th><th>Contact</th><th>Address</th><th>Items</th><th>Total</th><th>Status</th>
+  </tr></thead><tbody>${list.map(o => {
+    const items = (o.items||[]).map(it => `<li>${it.qty}× ${esc(it.title)} — ${K(it.priceZmw)}${it.aliLink?` · <a href="${it.aliLink}" target="_blank" rel="noopener">AliExpress ↗</a>`:''}</li>`).join('');
+    const sel = `<select onchange="setStatus('${o.id}', this.value)">${STATUSES.map(s=>`<option value="${s}"${(o.status||'new')===s?' selected':''}>${s}</option>`).join('')}</select>`;
+    return `<tr>
+      <td data-l="Date">${fmtDate(o.createdAt)}</td>
+      <td data-l="Store"><span class="store-tag">${esc(o.storeName||o.store||'')}</span></td>
+      <td data-l="Ref">#${esc(o.ref||'')}</td>
+      <td data-l="Customer">${esc(o.name||'')}</td>
+      <td data-l="Contact">${esc(o.phone||'')}<br><span class="badge">${esc((o.provider||'').toUpperCase())}</span></td>
+      <td data-l="Address">${esc(o.address||'')}</td>
+      <td data-l="Items"><ul class="items">${items}</ul></td>
+      <td data-l="Total" class="total">${K(o.total)}</td>
+      <td data-l="Status">${sel}</td>
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+</script>
+</body>
+</html>
