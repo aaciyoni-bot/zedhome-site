@@ -757,20 +757,25 @@
     // Cached so the home strip and the budget view share one API call.
     // The K10 floor drops junk/placeholder listings.
     let budgetCache = null;
-    async function fetchBudget() {
-        if (budgetCache && budgetCache.length) return budgetCache;
+    let lastBudgetRawCount = 0;
+    async function fetchBudget(page) {
+        page = page || 1;
+        if (page === 1 && budgetCache && budgetCache.length) return budgetCache;
         if (!CONFIG.API_BASE_URL) return null;
         try {
             const url = CONFIG.API_BASE_URL.replace(/\/$/, '') + '/api/products?q='
-                + encodeURIComponent('kitchen gadget storage organizer cleaning home') + '&sort=priceAsc';
+                + encodeURIComponent('kitchen gadget storage organizer cleaning home') + '&sort=priceAsc&page=' + page;
             const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
             const raw = extractApiList(await res.json());
-            budgetCache = raw.map((p, i) => normalizeApiProduct(p, i))
+            lastBudgetRawCount = raw.length;
+            const items = raw.map((p, i) => normalizeApiProduct(p, i))
                 .filter(p => p.priceZmw >= 10 && p.priceZmw <= CONFIG.BUDGET_MAX_ZMW);
+            if (page === 1) budgetCache = items;
+            return items;
         } catch (e) {
             console.warn('Budget fetch failed:', e);
+            return page === 1 ? budgetCache : [];
         }
-        return budgetCache;
     }
 
     // Fetches one page of API results for a query. Returns the raw product array.
@@ -801,7 +806,8 @@
         let list = null;
 
         if (budgetOnly) {
-            list = await fetchBudget();
+            list = await fetchBudget(1);
+            if (list && list.length) { apiMode = true; hasMore = lastBudgetRawCount >= 15; }
         } else if (CONFIG.API_BASE_URL) {
             const raw = await fetchApiPage(query, 1);
             if (raw && raw.length) {
@@ -843,22 +849,27 @@
     // Loads the next page and appends it — driven by the scroll sentinel and the
     // manual "Show more" button. Only runs for live API results (not demo/budget).
     async function loadMoreProducts() {
-        if (!apiMode || currentBudget || loadingMore || !hasMore) return;
+        if (!apiMode || loadingMore || !hasMore) return;
         loadingMore = true;
         const btn = $('loadMoreBtn');
         btn.classList.add('opacity-60');
         btn.innerHTML = '<span class="spinner inline-block !w-4 !h-4 !border-2 align-middle mr-2"></span> Loading more…';
 
-        const raw = await fetchApiPage(currentQuery, currentPage + 1) || [];
-        const fresh = raw.map(normalizeApiProduct).filter(p => !products.find(x => x.id === p.id));
+        let fresh = [];
+        if (currentBudget) {
+            const items = await fetchBudget(currentPage + 1) || [];
+            fresh = items.filter(p => !products.find(x => x.id === p.id));
+            currentPage += 1;
+            hasMore = fresh.length > 0 && lastBudgetRawCount >= 15;
+        } else {
+            const raw = await fetchApiPage(currentQuery, currentPage + 1) || [];
+            fresh = raw.map(normalizeApiProduct).filter(p => !products.find(x => x.id === p.id));
+            if (fresh.length) { currentPage += 1; hasMore = raw.length >= 15; } else { hasMore = false; }
+        }
 
         if (fresh.length) {
-            currentPage += 1;
             products = products.concat(fresh);
             renderProducts(currentQuery, currentBudget, true, fresh);
-            hasMore = raw.length >= 15;
-        } else {
-            hasMore = false;
         }
 
         loadingMore = false;
@@ -868,7 +879,7 @@
     }
 
     function updateLoadMore() {
-        $('loadMoreWrap').classList.toggle('hidden', !(apiMode && hasMore && !currentBudget));
+        $('loadMoreWrap').classList.toggle('hidden', !(apiMode && hasMore));
     }
     function hideLoadMore() {
         $('loadMoreWrap').classList.add('hidden');
