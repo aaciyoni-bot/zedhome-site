@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>ZedHome — Home &amp; Kitchen Delivered, Pay with Mobile Money 🇿🇲</title>
-    <meta name="description" content="ZedHome — Zambia's home &amp; kitchen store: appliances, cookware, décor and everyday essentials at wholesale prices. Pay with MTN MoMo, Airtel Money or Zamtel Kwacha. No credit card. Made for your phone.">
+    <title>Kayachi — Home &amp; Kitchen Delivered, Pay with Mobile Money 🇿🇲</title>
+    <meta name="description" content="Kayachi — Zambia's home &amp; kitchen store: appliances, cookware, décor and everyday essentials at wholesale prices. Pay with MTN MoMo, Airtel Money or Zamtel Kwacha. No credit card. Made for your phone.">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0d9488">
+    <meta name="theme-color" content="#452117">
     <link rel="icon" type="image/svg+xml" href="icon.svg">
     <link rel="icon" type="image/png" href="icon-192.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="ZedHome">
+    <meta name="apple-mobile-web-app-title" content="Kayachi">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -24,10 +24,10 @@
                 extend: {
                     colors: {
                         glow: {
-                            50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 400: '#2dd4bf',
-                            500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 900: '#134e4a'
+                            50: '#fdf6f2', 100: '#f8e7dc', 200: '#eecab4', 400: '#d2845d',
+                            500: '#bd6844', 600: '#a05334', 700: '#82422a', 900: '#452117'
                         },
-                        gold: { DEFAULT: '#e3ae4e', soft: '#f4d58d', deep: '#b8862f' },
+                        gold: { DEFAULT: '#7d9471', soft: '#a9bd9e', deep: '#55684c' },
                         zam: { green: '#198a00', red: '#de2010', black: '#000000', orange: '#ef7d00' }
                     },
                     fontFamily: { sans: ['Inter', 'sans-serif'], display: ['"Bitter"', 'serif'] }
@@ -40,50 +40,32 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .spinner { border: 3px solid #ccfbf1; border-top-color: #0d9488; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; }
+        .spinner { border: 3px solid #f8e7dc; border-top-color: #bd6844; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .pulse-ring { animation: pulseRing 1.5s ease-out infinite; }
         @keyframes pulseRing { 0% { box-shadow: 0 0 0 0 rgba(25,138,0,0.4); } 100% { box-shadow: 0 0 0 16px rgba(25,138,0,0); } }
-        /* ZedHome — warm cozy identity */
+        /* ===== KAYACHI — hearth identity =====
+           A home, not a warehouse. Everything is arched and clay-toned;
+           there is not a hard corner anywhere. */
         .font-display { letter-spacing: -0.005em; }
-        #productGrid > * { transition: transform .2s ease, box-shadow .2s ease; }
-        #productGrid > *:hover { transform: translateY(-4px); box-shadow: 0 16px 38px -12px rgba(120,72,45,.38); }
+
+        /* Product cards are arched, like a doorway or an oven mouth. */
+        #productGrid > * { border-radius: 26px 26px 14px 14px; transition: transform .2s ease-out, box-shadow .2s ease-out; }
+        #productGrid > * img { border-radius: 24px 24px 0 0; }
+        #productGrid > *:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -14px rgba(69,33,23,.32) !important; }
+
+        /* A warm hearth glow behind the hero instead of a grid. */
+        #heroSection::before {
+            content: ''; position: absolute; inset: 0; pointer-events: none;
+            background: radial-gradient(120% 90% at 50% 115%, rgba(210,132,93,.28), transparent 62%);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #productGrid > *, .fade-in { transition: none !important; animation: none !important; }
+        }
     </style>
 </head>
 <body class="bg-glow-50 font-sans text-slate-800 min-h-screen flex flex-col">
-
-    <!-- ═══ ORIZIS INTRO · standalone module ═══ -->
-    <div id="orizis-intro">
-      <style>
-        #orizis-intro { position: fixed; inset: 0; z-index: 999999; background: #0d0510; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: opacity 0.45s ease; }
-        #orizis-intro.oi-out { opacity: 0; pointer-events: none; }
-        #orizis-intro .oi-mark { font-family: 'Playfair Display', Georgia, serif; font-weight: 900; font-size: clamp(38px, 9vw, 72px); letter-spacing: 0.22em; margin-right: -0.22em; background: linear-gradient(100deg, #134e4a 0%, #ccfbf1 28%, #e3ae4e 50%, #ccfbf1 72%, #134e4a 100%); background-size: 240% auto; -webkit-background-clip: text; background-clip: text; color: transparent; opacity: 0; animation: oiShine 1.9s ease forwards, oiRise 0.9s cubic-bezier(0.22,1,0.36,1) forwards; }
-        #orizis-intro .oi-sub { font-family: 'Inter', Arial, sans-serif; font-weight: 700; font-size: clamp(10px, 2.2vw, 14px); letter-spacing: 0.55em; margin-right: -0.55em; color: #5a8a82; margin-top: 14px; opacity: 0; animation: oiFade 0.7s ease 0.55s forwards; }
-        #orizis-intro .oi-line { width: 0; height: 1px; background: linear-gradient(90deg, transparent, #e3ae4e, transparent); margin-top: 22px; animation: oiLine 1.1s ease 0.35s forwards; }
-        #orizis-intro .oi-load { display: flex; align-items: center; gap: 8px; margin-top: 26px; color: #5a8a82; font-family: 'Inter', Arial, sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.2em; opacity: 0; animation: oiFade 0.7s ease 0.9s forwards; }
-        #orizis-intro .oi-spin { width: 14px; height: 14px; border: 2px solid rgba(227,174,78,0.25); border-top-color: #e3ae4e; border-radius: 50%; animation: oiSpin 0.9s linear infinite; }
-        @keyframes oiSpin { to { transform: rotate(360deg); } }
-        @keyframes oiShine { from { background-position: 200% center; } to { background-position: -40% center; } }
-        @keyframes oiRise { from { opacity: 0; transform: translateY(14px) scale(0.97); } to { opacity: 1; transform: none; } }
-        @keyframes oiFade { to { opacity: 1; } }
-        @keyframes oiLine { to { width: min(320px, 60vw); } }
-      </style>
-      <div class="oi-mark">ORIZIS</div>
-      <div class="oi-line"></div>
-      <div class="oi-sub">TECHNOLOGY</div>
-      <div class="oi-load"><div class="oi-spin"></div>LOADING</div>
-      <script>
-        (function () {
-          var el = document.getElementById('orizis-intro');
-          var done = false;
-          function out() { if (done) return; done = true; el.classList.add('oi-out'); setTimeout(function () { el.remove(); }, 500); }
-          el.addEventListener('click', out);
-          el.addEventListener('touchstart', out, { passive: true });
-          setTimeout(out, 1300);
-        })();
-      </script>
-    </div>
-    <!-- ═══ /ORIZIS INTRO ═══ -->
 
     <!-- ======================= TOP BAR ======================= -->
     <div class="bg-glow-900 text-white text-xs sm:text-sm py-1.5 px-4 text-center">
@@ -94,12 +76,14 @@
     <header class="bg-white shadow-sm sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3 sm:gap-6">
             <a href="#" onclick="goHome(); return false;" class="flex items-center gap-2 shrink-0">
-                <div class="bg-gradient-to-br from-glow-500 to-glow-700 text-white w-10 h-10 rounded-xl flex items-center justify-center text-lg shadow-md">
-                    <i class="fas fa-house-chimney"></i>
-                </div>
+                <svg viewBox="0 0 40 40" class="w-10 h-10 shrink-0" role="img" aria-label="Kayachi">
+                    <path d="M7 35V18a13 13 0 0 1 26 0v17a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z" fill="#a05334"/>
+                    <path d="M13 22h14a7 7 0 0 1-14 0z" fill="#fdf6f2"/>
+                    <path d="M20 13.5V18" stroke="#a9bd9e" stroke-width="2.6" stroke-linecap="round"/>
+                </svg>
                 <div class="hidden sm:block">
-                    <h1 class="text-xl font-display font-extrabold tracking-tight leading-none">Zed<span class="text-glow-600">Home</span></h1>
-                    <p class="text-[10px] text-slate-400 leading-none mt-0.5">Wholesale home &amp; kitchen. Pay Local.</p>
+                    <h1 class="text-xl font-display font-extrabold tracking-tight leading-none text-glow-900">Kayachi</h1>
+                    <p class="text-[10px] text-glow-600 font-semibold leading-none mt-1 tracking-wide uppercase">Everything for the home</p>
                 </div>
             </a>
 
@@ -212,7 +196,7 @@
     <!-- ======================= HOW IT WORKS ======================= -->
     <section id="how-it-works" class="bg-white border-t border-glow-100">
         <div class="max-w-7xl mx-auto px-4 py-14">
-            <h3 class="text-2xl sm:text-3xl font-display font-extrabold text-center">How ZedHome Works</h3>
+            <h3 class="text-2xl sm:text-3xl font-display font-extrabold text-center">How Kayachi Works</h3>
             <p class="text-center text-slate-500 mt-2 max-w-xl mx-auto">From your phone to your door in 4 simple steps — no credit card, no stress.</p>
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-10">
                 <div class="text-center p-5 rounded-2xl bg-glow-50">
@@ -247,9 +231,9 @@
     <section id="about" class="bg-glow-50 border-t border-glow-100">
         <div class="max-w-7xl mx-auto px-4 py-14 grid sm:grid-cols-2 gap-10 items-center">
             <div>
-                <h3 class="text-2xl sm:text-3xl font-display font-extrabold">About Zed<span class="text-glow-600">Home</span></h3>
+                <h3 class="text-2xl sm:text-3xl font-display font-extrabold">About Kayachi</h3>
                 <p class="mt-4 text-slate-600 leading-relaxed">A better home shouldn't cost a fortune. But between the middlemen and the shops, the same blender, cookware set or air fryer that leaves the warehouse for a few hundred Kwacha ends up costing double by the time it reaches Zambia.</p>
-                <p class="mt-3 text-slate-600 leading-relaxed"><b>ZedHome fixes that.</b> We connect you directly to the world's biggest home &amp; kitchen catalog, with prices in Kwacha and payment through the mobile money you already use every day. You shop, you approve a prompt on your phone, and we take care of everything else — ordering, shipping and tracking until it reaches your hands.</p>
+                <p class="mt-3 text-slate-600 leading-relaxed"><b>Kayachi fixes that.</b> We connect you directly to the world's biggest home &amp; kitchen catalog, with prices in Kwacha and payment through the mobile money you already use every day. You shop, you approve a prompt on your phone, and we take care of everything else — ordering, shipping and tracking until it reaches your hands.</p>
                 <p class="mt-3 text-slate-600 leading-relaxed">Real quality. Honest prices. Proudly built for the homes of Zambia. 🇿🇲</p>
             </div>
             <div class="grid grid-cols-1 gap-4">
@@ -280,7 +264,7 @@
                 </details>
                 <details class="faq-item">
                     <summary>Do I need a credit card or bank account?</summary>
-                    <p>No! That's the whole point of ZedHome. All you need is a Mobile Money wallet — MTN MoMo, Airtel Money or Zamtel Kwacha — with enough balance for your order.</p>
+                    <p>No! That's the whole point of Kayachi. All you need is a Mobile Money wallet — MTN MoMo, Airtel Money or Zamtel Kwacha — with enough balance for your order.</p>
                 </details>
                 <details class="faq-item">
                     <summary>How long does delivery take?</summary>
@@ -323,8 +307,12 @@
         <div class="max-w-7xl mx-auto px-4 py-10 grid sm:grid-cols-3 gap-8 text-sm">
             <div>
                 <div class="flex items-center gap-2 mb-3">
-                    <div class="bg-gradient-to-br from-glow-500 to-glow-700 text-white w-8 h-8 rounded-lg flex items-center justify-center"><i class="fas fa-house-chimney"></i></div>
-                    <span class="font-display font-extrabold text-white text-lg">Zed<span class="text-glow-400">Home</span></span>
+                    <svg viewBox="0 0 40 40" class="w-8 h-8 shrink-0" aria-hidden="true">
+                        <path d="M7 35V18a13 13 0 0 1 26 0v17a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z" fill="#f8e7dc"/>
+                        <path d="M13 22h14a7 7 0 0 1-14 0z" fill="#a05334"/>
+                        <path d="M20 13.5V18" stroke="#7d9471" stroke-width="2.6" stroke-linecap="round"/>
+                    </svg>
+                    <span class="font-display font-extrabold text-white text-lg">Kayachi</span>
                 </div>
                 <p class="text-glow-100/60">Zambia's store for imported home &amp; kitchen at wholesale prices — appliances, cookware, décor and everyday essentials. Pay with the mobile money you already have.</p>
             </div>
@@ -332,7 +320,7 @@
                 <h4 class="font-bold text-white mb-3">Quick links</h4>
                 <ul class="space-y-2 text-glow-100/60">
                     <li><a href="#how-it-works" class="hover:text-white transition">How it works</a></li>
-                    <li><a href="#about" class="hover:text-white transition">About ZedHome</a></li>
+                    <li><a href="#about" class="hover:text-white transition">About Kayachi</a></li>
                     <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
                     <li><a href="#support" class="hover:text-white transition">Customer support</a></li>
                 </ul>
@@ -347,7 +335,7 @@
                 <p class="mt-4 text-glow-100/50 text-xs">Prices shown in Zambian Kwacha (ZMW), incl. service. Exchange rate updated daily.</p>
             </div>
         </div>
-        <div class="border-t border-white/10 text-center py-4 text-xs text-glow-100/50">© 2026 ZedHome Zambia · an ORIZIS TECHNOLOGY brand. All rights reserved.</div>
+        <div class="border-t border-white/10 text-center py-4 text-xs text-glow-100/50">© 2026 Kayachi Zambia · an ORIZIS TECHNOLOGY brand. All rights reserved.</div>
     </footer>
 
     <!-- ======================= CART DRAWER ======================= -->
@@ -512,7 +500,7 @@
     <div id="installBanner" class="hidden fixed bottom-0 left-0 right-0 z-40 bg-glow-900 text-white px-4 py-3 flex items-center gap-3 shadow-2xl">
         <img src="icon-192.png" alt="" class="w-10 h-10 rounded-xl shrink-0">
         <div class="flex-1 min-w-0">
-            <p class="font-bold text-sm leading-tight">Get the ZedHome App 🇿🇲</p>
+            <p class="font-bold text-sm leading-tight">Get the Kayachi App 🇿🇲</p>
             <p class="text-[11px] text-glow-100/80 leading-tight">Faster shopping, right from your home screen</p>
         </div>
         <button onclick="installApp()" class="shrink-0 bg-glow-600 hover:bg-glow-500 text-white text-xs font-extrabold px-4 py-2.5 rounded-full transition">
@@ -530,7 +518,7 @@
                 <ol class="mt-3 space-y-2.5 text-sm">
                     <li><b>1.</b> Tap the <b>Share</b> button <span class="inline-block border border-slate-300 rounded-md px-1.5 py-0.5 text-blue-500"><i class="fas fa-arrow-up-from-bracket"></i></span> at the <b>bottom of Safari</b> (the arrow below points at it)</li>
                     <li><b>2.</b> Scroll down and tap <b>"Add to Home Screen"</b> <span class="inline-block border border-slate-300 rounded-md px-1.5 py-0.5">➕</span></li>
-                    <li><b>3.</b> Tap <b>Add</b> — ZedHome appears on your home screen like an app!</li>
+                    <li><b>3.</b> Tap <b>Add</b> — Kayachi appears on your home screen like an app!</li>
                 </ol>
                 <button onclick="closeInstallGuide()" class="mt-4 w-full bg-glow-100 hover:bg-glow-200 font-bold py-2.5 rounded-xl text-sm">Got it</button>
             </div>
@@ -544,7 +532,7 @@
                 <ol class="mt-3 space-y-2.5 text-sm">
                     <li><b>1.</b> Tap the <b>⋮ menu</b> at the <b>top-right of Chrome</b> (the arrow above points at it)</li>
                     <li><b>2.</b> Tap <b>"Add to Home screen"</b> or <b>"Install app"</b></li>
-                    <li><b>3.</b> Confirm — ZedHome appears on your home screen like an app!</li>
+                    <li><b>3.</b> Confirm — Kayachi appears on your home screen like an app!</li>
                 </ol>
                 <button onclick="closeInstallGuide()" class="mt-4 w-full bg-glow-100 hover:bg-glow-200 font-bold py-2.5 rounded-xl text-sm">Got it</button>
             </div>
@@ -553,23 +541,23 @@
 
     <style>
         html { scroll-behavior: smooth; }
-        .cat-chip { flex-shrink: 0; background: #ccfbf1; border-radius: 9999px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #115e56; transition: all .2s; }
-        .cat-chip:hover { background: #99f6e4; color: #134e4a; }
-        .cat-chip-deal { flex-shrink: 0; display: inline-flex; align-items: center; gap: 7px; background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; border-radius: 9999px; padding: 10px 22px; font-size: 14px; font-weight: 800; box-shadow: 0 6px 16px -4px rgba(217,119,6,.55); transition: all .2s; }
-        .cat-chip-deal:hover { transform: translateY(-1px); box-shadow: 0 9px 22px -4px rgba(217,119,6,.65); }
+        .cat-chip { flex-shrink: 0; background: #f8e7dc; border-radius: 9999px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #82422a; transition: all .2s; }
+        .cat-chip:hover { background: #eecab4; color: #452117; }
+        .cat-chip-deal { flex-shrink: 0; display: inline-flex; align-items: center; gap: 7px; background: linear-gradient(135deg, #7d9471, #55684c); color: #fff; border-radius: 9999px; padding: 10px 22px; font-size: 14px; font-weight: 800; box-shadow: 0 6px 16px -4px rgba(85,104,76,.5); transition: all .2s; }
+        .cat-chip-deal:hover { transform: translateY(-1px); box-shadow: 0 9px 22px -4px rgba(85,104,76,.6); }
         .cat-chip-deal i { animation: flamePulse 1.6s ease-in-out infinite; }
         @keyframes flamePulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: .85; } }
         .side-cat { display: flex; align-items: center; gap: 9px; width: 100%; text-align: left; padding: 9px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; color: #475569; transition: all .15s; }
-        .side-cat:hover { background: #ccfbf1; color: #134e4a; }
-        .side-cat i { color: #0d9488; font-size: 13px; }
+        .side-cat:hover { background: #f8e7dc; color: #452117; }
+        .side-cat i { color: #bd6844; font-size: 13px; }
         .side-cat-deal { color: #b45309; font-weight: 800; }
-        .provider-btn.selected { border-color: #0d9488 !important; background: #f0fdfa; }
+        .provider-btn.selected { border-color: #bd6844 !important; background: #fdf6f2; }
         .paymethod-btn { border-color: #e2e8f0; }
-        .paymethod-btn.selected { border-color: #0d9488 !important; background: #f0fdfa; }
-        .faq-item { background: #f0fdfa; border-radius: 16px; padding: 16px 20px; }
+        .paymethod-btn.selected { border-color: #bd6844 !important; background: #fdf6f2; }
+        .faq-item { background: #fdf6f2; border-radius: 16px; padding: 16px 20px; }
         .faq-item summary { font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
         .faq-item summary::-webkit-details-marker { display: none; }
-        .faq-item summary::after { content: '+'; font-size: 20px; color: #0d9488; font-weight: 800; }
+        .faq-item summary::after { content: '+'; font-size: 20px; color: #bd6844; font-weight: 800; }
         .faq-item[open] summary::after { content: '−'; }
         .faq-item p { margin-top: 10px; color: #64748b; font-size: 14px; line-height: 1.6; }
         .guide-arrow-down { animation: bounceDown 1s ease-in-out infinite; }
@@ -580,7 +568,7 @@
 
     <script>
     /* ================================================================
-       ZEDHOME CONFIG — edit these values
+       KAYACHI CONFIG — edit these values
        ================================================================ */
     const CONFIG = {
         // Your backend API (the Vercel server.js that proxies AliExpress).
@@ -591,8 +579,8 @@
         MARKUP_PERCENT: 30,               // company profit margin on every purchase
         SERVICE_FEE_PERCENT: 5,           // fee shown at checkout (covers MoMo charges)
         BUDGET_MAX_ZMW: 200,              // price ceiling for the "Home deals under K200" section
-        STORE_ID: "zedhome",                // order records + admin dashboard filter
-        STORE_NAME: "ZedHome",
+        STORE_ID: "kayachi",                // order records + admin dashboard filter
+        STORE_NAME: "Kayachi",
         ORDER_EMAIL: "office@orizisgroup.com",   // every order is emailed here (via FormSubmit)
         FIREBASE: {                        // shared "Zed Zambia" project — orders dashboard
             apiKey: "AIzaSyAqkEfNwKZzofId0XCGcs17sVFh5NYryrM",
@@ -610,7 +598,7 @@
            the checkout stays Mobile-Money-only with no broken buttons. */
         VERIPOINTS_ENABLED: false,        // false = pure Mobile-Money site, no wallet UI at all
         VERIPOINTS_SDK: "",               // URL of the shared veripoints-sdk.js (central origin). Empty ⇒ stays dormant.
-        VERIPOINTS_SITE_ID: "zedhome",    // this product's id in the shared wallet
+        VERIPOINTS_SITE_ID: "kayachi",    // this product's id in the shared wallet
         EARN_PERCENT: 3,                  // loyalty points earned on every successful order (any method)
         REDEEM_RATE: 1,                   // ZMW value of 1 redeemed point (points→Kwacha)
         VERIPOINTS_TOPUP_ENABLED: false   // ⚠️ real-money top-up = Bank-of-Zambia e-money → LOCKED until licensed
@@ -668,7 +656,7 @@
        STATE
        ================================================================ */
     let products = [];
-    let cart = JSON.parse(localStorage.getItem('zedhome_cart') || '[]');
+    let cart = JSON.parse(localStorage.getItem('kayachi_cart') || '[]');
     let currentProduct = null;
     let pmQtyCount = 1;
     let selectedProvider = null;
@@ -979,7 +967,7 @@
        CART
        ================================================================ */
     function saveCart() {
-        localStorage.setItem('zedhome_cart', JSON.stringify(cart));
+        localStorage.setItem('kayachi_cart', JSON.stringify(cart));
         renderCart();
     }
 
@@ -1358,7 +1346,7 @@
         cart = [];
         saveCart();
         closeCheckout();
-        showToast('🎉 Thank you for shopping with ZedHome!');
+        showToast('🎉 Thank you for shopping with Kayachi!');
     }
 
     /* ================================================================
@@ -1381,7 +1369,7 @@
 
     function showInstallBanner() {
         if (IS_INSTALLED || !IS_MOBILE) return;
-        const snoozedAt = parseInt(localStorage.getItem('zedhome_install_snooze') || '0');
+        const snoozedAt = parseInt(localStorage.getItem('kayachi_install_snooze') || '0');
         if (Date.now() - snoozedAt < INSTALL_SNOOZE_MS) return;
         $('installBanner').classList.remove('hidden');
         document.body.classList.add('has-install-banner');
@@ -1393,7 +1381,7 @@
     }
 
     function dismissInstall() {
-        localStorage.setItem('zedhome_install_snooze', String(Date.now()));
+        localStorage.setItem('kayachi_install_snooze', String(Date.now()));
         hideInstallBanner();
     }
 
