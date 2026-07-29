@@ -696,6 +696,34 @@
     // Normalizes many possible AliExpress-API response shapes into one format.
     // Prices: if the backend already returns Kwacha (priceZMW) we use it as-is;
     // otherwise we treat the price as USD and convert with markup.
+    /* ----------------------------------------------------------------
+       CATALOGUE CACHE
+       The upstream product search intermittently answers with a 5005
+       "data gather failed" error and an empty list. Without this the shop
+       would drop to its tiny built-in demo catalogue every time that
+       happens. We keep the last catalogue that did load and show it
+       instead, so a hiccup upstream never empties the shelves.
+       ---------------------------------------------------------------- */
+    const CATALOG_CACHE_KEY = 'catalog_cache_v1';
+    const CATALOG_CACHE_MAX_AGE = 24 * 60 * 60 * 1000;
+
+    function writeCatalogCache(query, list) {
+        if (!list || !list.length) return;
+        try {
+            const all = JSON.parse(localStorage.getItem(CATALOG_CACHE_KEY) || '{}');
+            all[query || '__home__'] = { at: Date.now(), list: list.slice(0, 60) };
+            localStorage.setItem(CATALOG_CACHE_KEY, JSON.stringify(all));
+        } catch (e) { /* quota or private mode - caching is best-effort */ }
+    }
+
+    function readCatalogCache(query) {
+        try {
+            const all = JSON.parse(localStorage.getItem(CATALOG_CACHE_KEY) || '{}');
+            const hit = all[query || '__home__'];
+            if (hit && Date.now() - hit.at < CATALOG_CACHE_MAX_AGE) return hit.list;
+        } catch (e) { /* unreadable cache is the same as no cache */ }
+        return null;
+    }
     function normalizeApiProduct(p, i) {
         const title = p.title || p.product_title || p.name || p.subject || 'Product';
         const rawZmw = p.priceZMW || p.price_zmw || p.priceKwacha || 0;
@@ -791,6 +819,17 @@
             }
         }
 
+        // A transient upstream error should not empty the shop - reuse the last good catalogue.
+
+        if ((!list || !list.length) && !budgetOnly) {
+
+            const cached = readCatalogCache(currentQuery);
+
+            if (cached && cached.length) { list = cached; apiMode = false; hasMore = false; }
+
+        }
+
+
         if (!list || !list.length) {
             // Demo mode: simple client-side filter
             let demo = query
@@ -800,6 +839,8 @@
             list = demo.map(normalizeDemo);
             if (budgetOnly) list = list.filter(p => p.priceZmw <= CONFIG.BUDGET_MAX_ZMW);
         }
+
+        writeCatalogCache(currentQuery, list);
 
         products = list;
         renderProducts(query, budgetOnly, false);
