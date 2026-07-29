@@ -7,6 +7,7 @@
     <meta name="description" content="ZedHome — Zambia's home &amp; kitchen store: appliances, cookware, décor and everyday essentials at wholesale prices. Pay with MTN MoMo, Airtel Money or Zamtel Kwacha. No credit card. Made for your phone.">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0d9488">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
     <link rel="icon" type="image/png" href="icon-192.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,7 +16,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
@@ -29,7 +30,7 @@
                         gold: { DEFAULT: '#e3ae4e', soft: '#f4d58d', deep: '#b8862f' },
                         zam: { green: '#198a00', red: '#de2010', black: '#000000', orange: '#ef7d00' }
                     },
-                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['"Playfair Display"', 'serif'] }
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['"Bitter"', 'serif'] }
                 }
             }
         }
@@ -43,6 +44,10 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         .pulse-ring { animation: pulseRing 1.5s ease-out infinite; }
         @keyframes pulseRing { 0% { box-shadow: 0 0 0 0 rgba(25,138,0,0.4); } 100% { box-shadow: 0 0 0 16px rgba(25,138,0,0); } }
+        /* ZedHome — warm cozy identity */
+        .font-display { letter-spacing: -0.005em; }
+        #productGrid > * { transition: transform .2s ease, box-shadow .2s ease; }
+        #productGrid > *:hover { transform: translateY(-4px); box-shadow: 0 16px 38px -12px rgba(120,72,45,.38); }
     </style>
 </head>
 <body class="bg-glow-50 font-sans text-slate-800 min-h-screen flex flex-col">
