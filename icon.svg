@@ -1,20 +1,48 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#bd6844"/>
-      <stop offset=".6" stop-color="#82422a"/>
-      <stop offset="1" stop-color="#452117"/>
-    </linearGradient>
-  </defs>
-
-  <rect width="512" height="512" fill="url(#bg)"/>
-
-  <!-- The arch: a doorway you come home through. -->
-  <path d="M116 416V232a140 140 0 0 1 280 0v184a20 20 0 0 1-20 20H136a20 20 0 0 1-20-20z" fill="#fdf6f2"/>
-
-  <!-- The bowl waiting inside it. -->
-  <path d="M180 280h152a76 76 0 0 1-152 0z" fill="#a05334"/>
-
-  <!-- Steam. -->
-  <path d="M256 196v48" stroke="#7d9471" stroke-width="20" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+<defs>
+            <linearGradient id="ky-wall" x1="0" y1="0" x2="0.8" y2="1">
+              <stop offset="0" stop-color="#2ea6a2"></stop><stop offset="0.42" stop-color="#0f7f80"></stop><stop offset="1" stop-color="#054d55"></stop>
+            </linearGradient>
+            <linearGradient id="ky-awn" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#f0906a"></stop><stop offset="0.5" stop-color="#d9663f"></stop><stop offset="1" stop-color="#a8401f"></stop>
+            </linearGradient>
+            <linearGradient id="ky-awn2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#fff1e4"></stop><stop offset="1" stop-color="#f6d4c0"></stop>
+            </linearGradient>
+            <linearGradient id="ky-win" x1="0" y1="0" x2="0.7" y2="1">
+              <stop offset="0" stop-color="#fffaf3"></stop><stop offset="0.6" stop-color="#f6e9d8"></stop><stop offset="1" stop-color="#e2cdb6"></stop>
+            </linearGradient>
+            <linearGradient id="ky-pot" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#3fbdb6"></stop><stop offset="0.45" stop-color="#0d7c80"></stop><stop offset="1" stop-color="#04434c"></stop>
+            </linearGradient>
+            <clipPath id="ky-awnclip">
+              <path d="M136 322 H888 V404 C888 404 840 452 794 452 C748 452 700 404 700 404 C700 404 652 452 606 452 C560 452 512 404 512 404 C512 404 464 452 418 452 C372 452 324 404 324 404 C324 404 276 452 230 452 C184 452 136 404 136 404 Z"></path>
+            </clipPath>
+            <filter id="ky-sh" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="20" stdDeviation="24" flood-color="#03383c" flood-opacity="0.3"></feDropShadow>
+            </filter>
+          </defs>
+          <g filter="url(#ky-sh)">
+            <path d="M196 430 H828 V846 A34 34 0 0 1 794 880 H230 A34 34 0 0 1 196 846 Z" fill="url(#ky-wall)"></path>
+            <path d="M196 430 H420 V880 H230 A34 34 0 0 1 196 846 Z" fill="#ffffff" opacity="0.09"></path>
+            <rect x="260" y="512" width="504" height="252" rx="16" fill="url(#ky-win)"></rect>
+            <g>
+              <path d="M382 626 H642 V692 A72 72 0 0 1 570 764 H454 A72 72 0 0 1 382 692 Z" fill="url(#ky-pot)"></path>
+              <rect x="352" y="590" width="320" height="34" rx="17" fill="url(#ky-pot)"></rect>
+              <rect x="492" y="556" width="40" height="40" rx="14" fill="#0d7c80"></rect>
+              <path d="M400 640 H430 V700 A40 40 0 0 0 470 740 H454 A72 72 0 0 1 400 692 Z" fill="#ffffff" opacity="0.2"></path>
+              <path d="M470 528 C440 490 500 470 476 428 M556 528 C526 490 586 470 562 428" fill="none" stroke="#d9663f" stroke-width="16" stroke-linecap="round" opacity="0.75"></path>
+            </g>
+            <rect x="452" y="792" width="120" height="88" rx="8" fill="#04434c" opacity="0.5"></rect>
+            <path d="M136 322 H888 V404 C888 404 840 452 794 452 C748 452 700 404 700 404 C700 404 652 452 606 452 C560 452 512 404 512 404 C512 404 464 452 418 452 C372 452 324 404 324 404 C324 404 276 452 230 452 C184 452 136 404 136 404 Z" fill="url(#ky-awn)"></path>
+            <g clip-path="url(#ky-awnclip)">
+              <rect x="324" y="310" width="94" height="160" fill="url(#ky-awn2)"></rect>
+              <rect x="512" y="310" width="94" height="160" fill="url(#ky-awn2)"></rect>
+              <rect x="700" y="310" width="94" height="160" fill="url(#ky-awn2)"></rect>
+              <rect x="136" y="310" width="60" height="160" fill="url(#ky-awn2)"></rect>
+            </g>
+            <path d="M136 322 H888 V352 H136 Z" fill="#8c3416" opacity="0.35"></path>
+            <path d="M512 152 L906 322 H118 Z" fill="url(#ky-wall)"></path>
+            <path d="M512 152 L906 322 H700 Z" fill="#04434c" opacity="0.28"></path>
+          </g>
 </svg>
