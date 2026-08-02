@@ -1056,7 +1056,7 @@
     }
 
     /* ---- ORIZIS gift voucher (redeems against the shared Vochira voucher API) ---- */
-    const VOUCHER = { api: 'https://zedcards-site.vercel.app', site: 'ZedHome', applied: null };
+    const VOUCHER = { api: 'https://zedcards-site.vercel.app', site: 'Kayachi', applied: null };
     function dueTotal() { return Math.max(0, cartTotals().total - (VOUCHER.applied ? VOUCHER.applied.amount : 0)); }
     async function applyVoucher() {
         const code = ($('vCode').value || '').trim().toUpperCase();
