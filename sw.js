@@ -1,5 +1,5 @@
 /* ZedHome service worker - enables app installation and basic offline shell */
-const CACHE = 'zedhome-v1';
+const CACHE = 'zedhome-site-products-20260920';
 
 self.addEventListener('install', e => {
     self.skipWaiting();
@@ -17,7 +17,7 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
     if (e.request.method !== 'GET') return;
     const url = new URL(e.request.url);
-    if (url.origin !== location.origin) return; // API and CDNs go straight to network
+    if (url.origin !== location.origin || url.pathname.startsWith('/api/')) return; // API and CDNs go straight to network
     e.respondWith(
         fetch(e.request)
             .then(res => {
@@ -28,3 +28,4 @@ self.addEventListener('fetch', e => {
             .catch(() => caches.match(e.request).then(m => m || caches.match('./index.html')))
     );
 });
+

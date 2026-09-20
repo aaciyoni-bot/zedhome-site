@@ -232,4 +232,7 @@ app.post('/api/vp/earn', async (req, res) => {
     }
 });
 
+require('./product-details-api').mountProductDetails(app, { axios, apiHost: API_HOST, apiKey: RAPIDAPI_KEY });
+
 module.exports = app;
+

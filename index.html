@@ -74,6 +74,7 @@
         #cartDrawer > div:last-child  { padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }  /* keep checkout above the home indicator */
         #cartItems { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
     </style>
+    <link rel="stylesheet" href="product-details.css?v=20260920">
 </head>
 <body class="bg-glow-50 font-sans text-slate-800 min-h-screen flex flex-col">
 
@@ -750,7 +751,7 @@
             title,
             priceZmw: priceZmwDirect || usdToKwacha(priceUsd || 5),
             oldZmw: oldUsd ? usdToKwacha(oldUsd) : 0,
-            rating: parseFloat(p.evaluate_rate || p.rating || p.score) || (4 + Math.round(((i * 37) % 10)) / 10 * 0.9),
+            rating: Math.max(0, Math.min(5, parseFloat(p.evaluate_rate || p.rating || p.score) || 0)),
             orders: parseInt(p.orders || p.sale_count || p.volume || p.lastest_volume) || 0,
             img: String(img).startsWith('//') ? 'https:' + img : img
         };
@@ -921,7 +922,7 @@
                         ${oldPrice > price ? `<span class="text-[11px] text-slate-400 line-through">${fmtK(oldPrice)}</span>` : ''}
                     </div>
                     <div class="mt-1 flex items-center justify-between text-[11px] text-slate-400">
-                        <span><i class="fas fa-star text-yellow-400"></i> ${Number(p.rating).toFixed(1)}</span>
+                        ${p.rating > 0 ? `${p.rating > 0 ? `${p.rating > 0 ? `${p.rating > 0 ? `${p.rating > 0 ? `${p.rating > 0 ? `${p.rating > 0 ? `<span><i class="fas fa-star text-yellow-400"></i> ${Number(p.rating).toFixed(1)}</span>` : `<span>No ratings yet</span>`}` : `<span>No ratings yet</span>`}` : `<span>No ratings yet</span>`}` : `<span>No ratings yet</span>`}` : `<span>No ratings yet</span>`}` : `<span>No ratings yet</span>`}` : `<span>No ratings yet</span>`}
                         ${p.orders ? `<span>${p.orders.toLocaleString()} sold</span>` : ''}
                     </div>
                     <button onclick="event.stopPropagation(); addToCart('${p.id}', 1)"
@@ -1028,6 +1029,9 @@
     /* ================================================================
        CART
        ================================================================ */
+    function escapeProductText(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    }
     function saveCart() {
         localStorage.setItem('kayachi_cart', JSON.stringify(cart));
         renderCart();
@@ -1109,7 +1113,7 @@
             <div class="flex gap-3 bg-glow-50 rounded-xl p-3">
                 <img src="${i.img}" class="w-16 h-16 rounded-lg object-cover bg-glow-100" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 400%22%3E%3Crect width=%22400%22 height=%22400%22 fill=%22%23f8e7dc%22/%3E%3Ctext x=%22200%22 y=%22196%22 font-family=%22Inter,Arial,sans-serif%22 font-size=%2230%22 font-weight=%22700%22 fill=%22%2382422a%22 text-anchor=%22middle%22%3EKayachi%3C/text%3E%3Ctext x=%22200%22 y=%22232%22 font-family=%22Inter,Arial,sans-serif%22 font-size=%2217%22 fill=%22%2382422a%22 opacity=%22.75%22 text-anchor=%22middle%22%3EPhoto coming soon%3C/text%3E%3C/svg%3E'">
                 <div class="flex-1 min-w-0">
-                    <p class="text-xs text-slate-600 line-clamp-2">${i.title}</p>
+                    <p class="text-xs text-slate-600 line-clamp-2">${escapeProductText(i.title)}</p>
                     <div class="flex items-center justify-between mt-2">
                         <span class="font-bold text-sm text-glow-700">${fmtK(itemZmw(i) * i.qty)}</span>
                         <div class="flex items-center gap-2">
@@ -1407,9 +1411,11 @@
         //  1) Firestore (shared "Zed Zambia" project) -> admin dashboard
         //  2) email to ORDER_EMAIL via FormSubmit, with a direct AliExpress link per item
         const items = cart.map(i => ({
-            id: String(i.id), title: i.title, qty: i.qty,
+            id: String(i.productId || i.id), cartItemId: String(i.id), title: i.title, qty: i.qty,
+            productId: String(i.productId || i.id), skuId: String(i.skuId || ''),
+            skuAttr: String(i.skuAttr || ''), selectedOptions: i.selectedOptions || {}, sourceUrl: String(i.sourceUrl || ''),
             priceZmw: Math.round(itemZmw(i) * i.qty * 100) / 100,
-            aliLink: aliLink(i.id) || ''
+            aliLink: aliLink(i.productId || i.id) || ''
         }));
         const order = {
             store: CONFIG.STORE_ID, storeName: CONFIG.STORE_NAME, ref,
@@ -1428,7 +1434,7 @@
         } catch (e) { console.warn('Firestore unavailable:', e); }
         // 2) Email via FormSubmit (no backend credentials needed)
         if (CONFIG.ORDER_EMAIL) {
-            const itemText = items.map(it => `${it.qty}x ${it.title} — ${fmtK(it.priceZmw)}${it.aliLink ? '  ' + it.aliLink : ''}`).join('\n');
+            const itemText = items.map(it => `${it.qty}x ${it.title} — ${fmtK(it.priceZmw)}${it.skuId ? ' | SKU: ' + it.skuId : ''}${it.skuAttr ? ' | Options: ' + it.skuAttr : ''}${it.aliLink ? '  ' + it.aliLink : ''}`).join('\n');
             fetch('https://formsubmit.co/ajax/' + encodeURIComponent(CONFIG.ORDER_EMAIL), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -1532,5 +1538,7 @@
     </script>
 <!--reljob-legal-injected-->
 <div style="font-family:system-ui,sans-serif;font-size:12.5px;color:#8a8f99;text-align:center;padding:16px 12px;background:#0f1116;border-top:1px solid #23262e"><a href="terms.html" style="color:#aeb4bf;margin:0 8px;text-decoration:none">Terms</a><a href="privacy.html" style="color:#aeb4bf;margin:0 8px;text-decoration:none">Privacy</a><a href="refunds.html" style="color:#aeb4bf;margin:0 8px;text-decoration:none">Refunds</a><a href="accessibility.html" style="color:#aeb4bf;margin:0 8px;text-decoration:none">Accessibility</a><a href="mailto:office@orizisgroup.com" style="color:#aeb4bf;margin:0 8px;text-decoration:none">Contact</a><div style="margin-top:6px;color:#5c616b">ORIZIS TECHNOLOGIES LIMITED &middot; TPIN 2002580846 &middot; office@orizisgroup.com</div></div>
+    <script src="product-details.js?v=20260920"></script>
 </body>
 </html>
+
