@@ -35,7 +35,9 @@
         }, { once: true });
         return img;
     }
-    const baseURL = () => String(CONFIG.API_BASE_URL || '').replace(/\/$/, '');
+    // All physical stores use the same AliExpress supplier. The maintained
+    // content service is shared; their existing checkout APIs remain separate.
+    const baseURL = () => String(CONFIG.PRODUCT_DETAILS_API_URL || 'https://zedmall-site.vercel.app').replace(/\/$/, '');
     function note(text, cls) { return el('p', 'pd-note ' + (cls || ''), text); }
     function checkedPrice(item) {
         const price = Number(item && (item.price !== undefined ? item.price : item.priceUSD));
