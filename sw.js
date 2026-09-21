@@ -1,5 +1,5 @@
 /* ZedHome service worker - enables app installation and basic offline shell */
-const CACHE = 'zedhome-site-products-20260920';
+const CACHE = 'zedhome-site-storefront-20260921';
 
 self.addEventListener('install', e => {
     self.skipWaiting();

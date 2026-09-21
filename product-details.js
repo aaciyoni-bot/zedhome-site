@@ -49,7 +49,10 @@
     function activePrice(s) {
         if (s.variant) return checkedPrice(s.variant);
         if (s.variants.length) return null;
-        return checkedPrice(s.detail) || (Number.isFinite(Number(s.base.priceZmw)) ? Number(s.base.priceZmw) : null);
+        // Search summaries can contain introductory prices that do not apply
+        // to this order. Only a supplier detail quote may authorize purchase.
+        if (!s.detail || String(s.detail.currency || '').toUpperCase() !== 'USD') return null;
+        return checkedPrice(s.detail);
     }
     function isReady(s) {
         return !!s.detail && !s.loading && !s.error &&
