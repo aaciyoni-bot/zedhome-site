@@ -64,7 +64,7 @@
     document.body.classList.add('sf-store');
     document.documentElement.style.colorScheme = 'light';
     const themeMeta = document.querySelector('meta[name="theme-color"]');
-    if (themeMeta) themeMeta.content = '#06231a';
+    if (themeMeta) themeMeta.content = '#a84b2d';
     if (!document.querySelector('link[data-sf-font]')) {
         const font = node('link');
         font.rel = 'stylesheet';
@@ -335,6 +335,17 @@
         categorySection.hidden = !!query || !!budget;
         ui.categoryButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.category === ui.query && !budget)));
     }
+    ['doSearch', 'searchCategory', 'goHome'].forEach(name => {
+        const original = window[name];
+        window[name] = function (...args) {
+            const query = name === 'goHome' ? '' : name === 'searchCategory' ? args[0] : $id('searchInput').value.trim();
+            refreshContext(query, false);
+            const result = original.apply(this, args);
+            if (name === 'goHome') window.scrollTo({top:0,behavior:'smooth'});
+            else scrollCatalog();
+            return result;
+        };
+    });
     const originalRenderProducts = window.renderProducts;
     window.renderProducts = function (query, budget, append, appended) {
         // Keep each store's catalogue bookkeeping; replace presentation only.
@@ -348,10 +359,7 @@
             if (!query && !budget) { ui.home = products.slice(); updateFeatures(); }
         }
         renderGrid();
-        if (!append) requestAnimationFrame(() => {
-            if (query || budget) catalog.scrollIntoView({ behavior: 'instant', block: 'start' });
-            else window.scrollTo({ top: 0, behavior: 'instant' });
-        });
+
     };
     if (typeof window.appendProducts === 'function') {
         const originalAppend = window.appendProducts;
@@ -479,5 +487,5 @@
         renderGrid();
         updateFeatures();
     }
-    window.ZambiaStorefront = { version: '2026.09.21', brand };
+    window.ZambiaStorefront = { version: '2026.09.27', brand };
 })();

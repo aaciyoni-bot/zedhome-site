@@ -1,13 +1,13 @@
 {
   "name": "Kayachi - Home & Kitchen, Pay with Mobile Money",
   "short_name": "Kayachi",
-  "description": "Home & kitchen store: appliances, cookware, décor and everyday essentials at wholesale prices. Pay with MTN MoMo, Airtel Money or Zamtel Kwacha.",
+  "description": "Home & kitchen store: appliances, cookware, d\u00e9cor and everyday essentials at wholesale prices. Pay with MTN MoMo, Airtel Money or Zamtel Kwacha.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#06231a",
-  "theme_color": "#06231a",
+  "background_color": "#ffffff",
+  "theme_color": "#a84b2d",
   "categories": [
     "shopping",
     "lifestyle",
